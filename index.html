@@ -2,12 +2,456 @@
 <html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=./funil-minicurso-v3.html">
-<link rel="canonical" href="./funil-minicurso-v3.html">
-<title>Funil Minicurso V3 — LL Mídia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de HTMLs LLMidia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal-900: #0E3838;
+  --teal-800: #155757;
+  --teal-700: #1B6E6E;
+  --teal-50: #F0F7F7;
+  --teal-100: #DCEEEE;
+  --green-500: #5BC93B;
+  --green-600: #4DB02E;
+  --coral-500: #E07B5A;
+  --coral-100: #FBE5DD;
+  --ink-900: #0A0A0A;
+  --ink-700: #2D2D2D;
+  --ink-500: #5C5C5C;
+  --ink-400: #8A8A8A;
+  --ink-200: #DEDEDE;
+  --ink-100: #EEEEEE;
+  --ink-50: #F6F6F5;
+  --paper: #FDFDFC;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Sora', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--ink-50);
+  color: var(--ink-800);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ====================== GATE (senha) ====================== */
+.gate {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--teal-900);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.gate-card {
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 44px 40px;
+  width: 100%; max-width: 420px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  text-align: center;
+}
+.gate-logo {
+  font-family: var(--font-display);
+  font-weight: 600; font-size: 13px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--teal-700);
+  margin-bottom: 18px;
+}
+.gate-card h1 {
+  font-family: var(--font-display);
+  font-weight: 500; font-size: 27px; line-height: 1.15;
+  color: var(--ink-900); margin-bottom: 8px; letter-spacing: -.02em;
+}
+.gate-card p { font-size: 14px; color: var(--ink-500); margin-bottom: 26px; }
+.gate-input {
+  width: 100%; padding: 14px 16px; font-size: 15px;
+  font-family: var(--font-body);
+  border: 1.5px solid var(--ink-200); border-radius: 10px;
+  background: var(--ink-50); color: var(--ink-900);
+  transition: border-color .15s ease; outline: none;
+}
+.gate-input:focus { border-color: var(--teal-700); background: var(--paper); }
+.gate-btn {
+  width: 100%; margin-top: 14px; padding: 14px;
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  color: var(--teal-900); background: var(--green-500);
+  border: none; border-radius: 10px; cursor: pointer;
+  transition: background .15s ease;
+}
+.gate-btn:hover { background: var(--green-600); }
+.gate-error {
+  margin-top: 14px; font-size: 13px; color: var(--coral-500);
+  min-height: 18px; font-weight: 500;
+}
+
+/* ====================== APP ====================== */
+.app { display: none; max-width: 980px; margin: 0 auto; padding: 48px 28px 80px; }
+.app.visible { display: block; animation: fade .3s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.head { margin-bottom: 28px; }
+.head-eyebrow {
+  font-family: var(--font-display); font-weight: 600; font-size: 12px;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--teal-700);
+  margin-bottom: 8px;
+}
+.head h1 {
+  font-family: var(--font-display); font-weight: 500;
+  font-size: 40px; line-height: 1.05; letter-spacing: -.025em; color: var(--ink-900);
+}
+.head p { color: var(--ink-500); font-size: 15px; margin-top: 10px; max-width: 620px; }
+
+.toolbar {
+  display: flex; align-items: center; gap: 12px;
+  margin: 26px 0 18px; flex-wrap: wrap;
+}
+.search {
+  flex: 1; min-width: 220px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; background: var(--paper);
+  border: 1.5px solid var(--ink-100); border-radius: 12px;
+}
+.search:focus-within { border-color: var(--teal-700); }
+.search input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: var(--font-body); font-size: 14.5px; color: var(--ink-900);
+}
+.search svg { flex-shrink: 0; color: var(--ink-400); }
+
+.crumbs {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 18px; font-size: 14px;
+}
+.btn-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 14px; border-radius: 10px; cursor: pointer;
+  background: var(--paper); border: 1.5px solid var(--ink-100);
+  font-family: var(--font-body); font-size: 13.5px; font-weight: 500;
+  color: var(--teal-800); transition: all .15s ease;
+}
+.btn-back:hover { border-color: var(--teal-700); background: var(--teal-50); }
+.btn-back[disabled] { opacity: .4; cursor: default; pointer-events: none; }
+.crumb-trail { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; color: var(--ink-400); }
+.crumb-link {
+  color: var(--teal-800); cursor: pointer; font-weight: 500;
+  padding: 4px 6px; border-radius: 6px;
+}
+.crumb-link:hover { background: var(--teal-50); }
+.crumb-sep { color: var(--ink-300); }
+.crumb-current { color: var(--ink-900); font-weight: 600; padding: 4px 6px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px; background: var(--paper);
+  border: 1.5px solid var(--ink-100); border-radius: 14px;
+  cursor: pointer; text-decoration: none; color: inherit;
+  transition: all .15s ease;
+}
+.item:hover { border-color: var(--teal-700); box-shadow: 0 6px 18px rgba(21,87,87,.08); transform: translateY(-1px); }
+.item-icon {
+  width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.item-icon.dir { background: var(--teal-50); color: var(--teal-700); }
+.item-icon.file { background: var(--coral-100); color: var(--coral-500); }
+.item-body { min-width: 0; }
+.item-name {
+  font-weight: 600; font-size: 14.5px; color: var(--ink-900);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.item-meta { font-size: 12px; color: var(--ink-400); margin-top: 2px; }
+.item-path { font-size: 11.5px; color: var(--ink-400); margin-top: 2px; font-family: var(--font-body); }
+
+.state { text-align: center; padding: 70px 20px; color: var(--ink-400); }
+.state .spinner {
+  width: 34px; height: 34px; margin: 0 auto 18px;
+  border: 3px solid var(--ink-100); border-top-color: var(--teal-700);
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.state h3 { font-family: var(--font-display); font-weight: 500; font-size: 19px; color: var(--ink-700); margin-bottom: 8px; }
+.state p { font-size: 14px; max-width: 440px; margin: 0 auto 16px; }
+.state button {
+  padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer;
+  background: var(--teal-800); color: #fff; font-family: var(--font-body);
+  font-size: 14px; font-weight: 500;
+}
+
+.footnote {
+  margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--ink-100);
+  font-size: 12px; color: var(--ink-400); line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .app { padding: 32px 18px 60px; }
+  .head h1 { font-size: 30px; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
-<p>A redirecionar para o <a href="./funil-minicurso-v3.html">Funil Minicurso V3</a>…</p>
-<script>location.replace('./funil-minicurso-v3.html');</script>
+
+<!-- ====================== GATE ====================== -->
+<div class="gate" id="gate">
+  <form class="gate-card" id="gate-form">
+    <div class="gate-logo">LL Mídia</div>
+    <h1>Central de HTMLs LLMidia</h1>
+    <p>Introduz a palavra-passe para aceder.</p>
+    <input class="gate-input" id="gate-input" type="password" placeholder="Palavra-passe" autocomplete="current-password" autofocus>
+    <button class="gate-btn" type="submit">Entrar</button>
+    <div class="gate-error" id="gate-error"></div>
+  </form>
+</div>
+
+<!-- ====================== APP ====================== -->
+<main class="app" id="app">
+  <div class="head">
+    <div class="head-eyebrow">LL Mídia</div>
+    <h1>Central de HTMLs LLMidia</h1>
+    <p>Navega pelas pastas dos projetos. Clica numa pasta para ver o que tem dentro; clica num ficheiro para o abrir num novo separador.</p>
+  </div>
+
+  <div class="toolbar">
+    <label class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="text" placeholder="Procurar ficheiro em toda a central…">
+    </label>
+  </div>
+
+  <div class="crumbs">
+    <button class="btn-back" id="back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Voltar
+    </button>
+    <div class="crumb-trail" id="trail"></div>
+  </div>
+
+  <div id="view"></div>
+
+  <div class="footnote">
+    Central pública alojada em GitHub Pages. A lista atualiza-se sozinha a cada novo ficheiro enviado ao repositório.
+    Esta entrada por palavra-passe é apenas um portão simbólico — não coloques aqui dados confidenciais.
+  </div>
+</main>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+var PASSWORD = '@Llmidia789';
+var REPO = 'dicasvisuais/llmidia';
+var BRANCH = 'main';
+var TREE_API = 'https://api.github.com/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1';
+// Ficheiros de raiz que não devem aparecer na navegação:
+var HIDDEN_ROOT = { 'index.html': 1, 'README.md': 1, '.gitignore': 1, 'CNAME': 1 };
+
+// ============================================================
+// GATE — palavra-passe (simbólica)
+// ============================================================
+var gate = document.getElementById('gate');
+var app = document.getElementById('app');
+
+function unlock() {
+  gate.style.display = 'none';
+  app.classList.add('visible');
+  initBrowser();
+}
+
+if (sessionStorage.getItem('llmidia_auth') === '1') {
+  unlock();
+}
+
+document.getElementById('gate-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var val = document.getElementById('gate-input').value;
+  var err = document.getElementById('gate-error');
+  if (val === PASSWORD) {
+    sessionStorage.setItem('llmidia_auth', '1');
+    unlock();
+  } else {
+    err.textContent = 'Palavra-passe incorreta.';
+    document.getElementById('gate-input').select();
+  }
+});
+
+// ============================================================
+// FILE BROWSER
+// ============================================================
+var rootNode = null;     // árvore { type:'dir', children:{} }
+var path = [];           // caminho atual, ex.: ['funis','minicurso']
+var allFiles = [];       // lista plana de ficheiros para pesquisa
+
+var view = document.getElementById('view');
+var trail = document.getElementById('trail');
+var backBtn = document.getElementById('back');
+var searchInput = document.getElementById('search');
+
+function initBrowser() {
+  if (rootNode) { render(); return; }
+  showState('<div class="spinner"></div><h3>A carregar a central…</h3>');
+  loadTree().then(function (entries) {
+    rootNode = buildTree(entries);
+    render();
+  }).catch(function (e) {
+    showState(
+      '<h3>Não foi possível carregar a lista</h3>' +
+      '<p>' + (e && e.message ? e.message : 'Erro de rede') +
+      '. Isto pode acontecer se o limite de pedidos do GitHub for atingido — tenta novamente daqui a pouco.</p>' +
+      '<button onclick="retry()">Tentar de novo</button>'
+    );
+  });
+}
+
+function retry() {
+  sessionStorage.removeItem('llmidia_tree');
+  rootNode = null;
+  initBrowser();
+}
+
+function loadTree() {
+  var cached = sessionStorage.getItem('llmidia_tree');
+  if (cached) { return Promise.resolve(JSON.parse(cached)); }
+  return fetch(TREE_API).then(function (res) {
+    if (!res.ok) { throw new Error('GitHub API ' + res.status); }
+    return res.json();
+  }).then(function (data) {
+    sessionStorage.setItem('llmidia_tree', JSON.stringify(data.tree || []));
+    return data.tree || [];
+  });
+}
+
+function buildTree(entries) {
+  var root = { type: 'dir', children: {} };
+  allFiles = [];
+  entries.forEach(function (e) {
+    if (e.type !== 'blob') { return; }                 // só ficheiros
+    if (!/\.html?$/i.test(e.path)) { return; }         // só HTML
+    var parts = e.path.split('/');
+    if (parts.length === 1 && HIDDEN_ROOT[parts[0]]) { return; }
+    if (parts.some(function (p) { return p.charAt(0) === '.'; })) { return; }
+
+    allFiles.push({ name: parts[parts.length - 1], path: e.path });
+    var node = root;
+    for (var i = 0; i < parts.length; i++) {
+      var part = parts[i];
+      var last = i === parts.length - 1;
+      if (last) {
+        node.children[part] = { type: 'file', name: part, path: e.path };
+      } else {
+        if (!node.children[part] || node.children[part].type !== 'dir') {
+          node.children[part] = { type: 'dir', name: part, children: {} };
+        }
+        node = node.children[part];
+      }
+    }
+  });
+  return root;
+}
+
+function nodeAt(p) {
+  var node = rootNode;
+  for (var i = 0; i < p.length; i++) {
+    if (!node.children[p[i]]) { return null; }
+    node = node.children[p[i]];
+  }
+  return node;
+}
+
+function countFiles(node) {
+  var n = 0;
+  for (var k in node.children) {
+    var c = node.children[k];
+    n += c.type === 'file' ? 1 : countFiles(c);
+  }
+  return n;
+}
+
+function render() {
+  searchInput.value = '';
+  renderTrail();
+  backBtn.disabled = path.length === 0;
+
+  var node = nodeAt(path);
+  if (!node) { path = []; node = rootNode; }
+
+  var dirs = [], files = [];
+  for (var k in node.children) {
+    var c = node.children[k];
+    if (c.type === 'dir') { dirs.push(c); } else { files.push(c); }
+  }
+  dirs.sort(byName); files.sort(byName);
+
+  if (dirs.length === 0 && files.length === 0) {
+    showState('<h3>Pasta vazia</h3><p>Ainda não há ficheiros HTML aqui.</p>');
+    return;
+  }
+
+  var html = '<div class="grid">';
+  dirs.forEach(function (d) {
+    html += '<div class="item" onclick="enter(\'' + esc(d.name) + '\')">' +
+      iconDir() +
+      '<div class="item-body"><div class="item-name">' + esc(d.name) + '</div>' +
+      '<div class="item-meta">' + countFiles(d) + ' ficheiro(s)</div></div></div>';
+  });
+  files.forEach(function (f) {
+    html += '<a class="item" href="' + esc(f.path) + '" target="_blank" rel="noopener">' +
+      iconFile() +
+      '<div class="item-body"><div class="item-name">' + esc(f.name) + '</div>' +
+      '<div class="item-meta">abrir HTML</div></div></a>';
+  });
+  html += '</div>';
+  view.innerHTML = html;
+}
+
+function renderTrail() {
+  var html = '<span class="crumb-link" onclick="goTo(0)">Central</span>';
+  for (var i = 0; i < path.length; i++) {
+    html += '<span class="crumb-sep">/</span>';
+    if (i === path.length - 1) {
+      html += '<span class="crumb-current">' + esc(path[i]) + '</span>';
+    } else {
+      html += '<span class="crumb-link" onclick="goTo(' + (i + 1) + ')">' + esc(path[i]) + '</span>';
+    }
+  }
+  trail.innerHTML = html;
+}
+
+function enter(name) { path.push(name); render(); }
+function goTo(depth) { path = path.slice(0, depth); render(); }
+backBtn.addEventListener('click', function () { if (path.length) { path.pop(); render(); } });
+
+// Pesquisa global
+searchInput.addEventListener('input', function () {
+  var q = searchInput.value.trim().toLowerCase();
+  if (!q) { render(); renderTrail(); return; }
+  var hits = allFiles.filter(function (f) { return f.path.toLowerCase().indexOf(q) !== -1; });
+  hits.sort(byName);
+  trail.innerHTML = '<span class="crumb-current">Resultados: ' + hits.length + '</span>';
+  if (hits.length === 0) { showState('<h3>Sem resultados</h3><p>Nenhum ficheiro corresponde a “' + esc(searchInput.value) + '”.</p>'); return; }
+  var html = '<div class="grid">';
+  hits.forEach(function (f) {
+    html += '<a class="item" href="' + esc(f.path) + '" target="_blank" rel="noopener">' +
+      iconFile() +
+      '<div class="item-body"><div class="item-name">' + esc(f.name) + '</div>' +
+      '<div class="item-path">' + esc(f.path) + '</div></div></a>';
+  });
+  html += '</div>';
+  view.innerHTML = html;
+});
+
+// Helpers
+function byName(a, b) { return a.name.localeCompare(b.name, 'pt'); }
+function showState(inner) { view.innerHTML = '<div class="state">' + inner + '</div>'; }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]; }); }
+function iconDir() {
+  return '<div class="item-icon dir"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg></div>';
+}
+function iconFile() {
+  return '<div class="item-icon file"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/><path d="m9 14 1.5 2L9 18"/><path d="m15 14-1.5 2 1.5 2"/></svg></div>';
+}
+</script>
 </body>
 </html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master and Scale 2026 — Brandbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Dark — cover e sidebar */
+  --dark:        #0C0C0C;
+  --dark-soft:   #131313;
+  --gold:        #A67C20;
+  --gold-light:  #C49A30;
+  --gold-dim:    #7A5C18;
+  --gold-bg:     #FAF4E6;
+  /* Light — conteúdo principal */
+  --bg:          #F8F6F2;
+  --bg-card:     #FFFFFF;
+  --bg-lift:     #EEECEA;
+  --ink:         #0E0D0B;
+  --ink-mid:     #1C1A17;
+  --ink-dim:     #3A3733;
+  --ink-faint:   #6B6760;
+  --border:      #D4D1CA;
+  --border-gold: #D4C088;
+  --border-dark: #2A2A2A;
+  --fd:'Playfair Display',Georgia,serif;
+  --fb:'Barlow',sans-serif;
+  --fl:'Barlow Condensed',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink-mid);font-family:var(--fb);font-weight:400;font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+::selection{background:var(--gold);color:#fff}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:232px;background:var(--dark-soft);border-right:1px solid var(--border-dark);padding:2rem 0;overflow-y:auto;z-index:100}
+.sb-logo{padding:0 1.5rem 2rem;border-bottom:1px solid var(--border-dark);margin-bottom:1.5rem}
+.sb-logo .ms{font-family:var(--fd);font-size:1.6rem;font-weight:900;color:var(--gold);letter-spacing:-.02em;line-height:1}
+.sb-logo .yr{font-family:var(--fl);font-size:.67rem;letter-spacing:.25em;color:#777;margin-top:.2rem}
+.nav-sec{padding:0 1.5rem;margin-bottom:1.1rem}
+.nav-sec-lbl{font-family:var(--fl);font-size:.57rem;letter-spacing:.2em;text-transform:uppercase;color:#555;margin-bottom:.45rem}
+.nav-link{display:block;font-size:.79rem;color:#999;text-decoration:none;padding:.27rem 0 .27rem .65rem;margin-left:-.65rem;border-left:2px solid transparent;transition:color .15s,border-color .15s}
+.nav-link:hover,.nav-link.active{color:var(--gold);border-left-color:var(--gold)}
+.main{margin-left:232px;min-height:100vh}
+.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:6rem 5rem;position:relative;overflow:hidden;border-bottom:3px solid var(--gold)}
+.cover-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 40%,rgba(201,168,76,.08) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(201,168,76,.05) 0%,transparent 50%),var(--dark)}
+.cover-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.05) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+.clbl{font-family:var(--fl);font-size:.67rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:1.5rem;position:relative;z-index:1}
+.ctitle{font-family:var(--fd);font-size:clamp(3rem,7vw,6rem);font-weight:900;line-height:1;letter-spacing:-.03em;position:relative;z-index:1;margin-bottom:.5rem;color:#F5F2EC}
+.ctitle span{color:var(--gold)}
+.csub{font-family:var(--fd);font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:400;font-style:italic;color:#999;position:relative;z-index:1;margin-bottom:3rem}
+.cmeta{display:flex;gap:3rem;flex-wrap:wrap;position:relative;z-index:1;border-top:1px solid #2A2A2A;padding-top:2rem}
+.cmeta .lbl{font-family:var(--fl);font-size:.58rem;letter-spacing:.2em;color:#666;text-transform:uppercase;margin-bottom:.2rem}
+.cmeta .val{font-size:.87rem;color:#CCC}
+section{padding:5rem;border-bottom:1px solid var(--border);background:var(--bg)}
+section:nth-child(odd){background:var(--bg-lift)}
+.ey{font-family:var(--fl);font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:.7rem}
+.ey::after{content:'';display:block;height:1px;width:40px;background:var(--gold-dim)}
+h2{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:1rem;color:var(--ink)}
+h2 em{color:var(--gold);font-style:italic}
+.intro{font-size:1.02rem;color:var(--ink-mid);max-width:640px;margin-bottom:3rem;line-height:1.85}
+.divider{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+.card{background:var(--bg-card);border:1px solid var(--border);padding:2rem}
+.card-gold{background:var(--gold-bg);border:1px solid var(--border-gold);padding:2rem}
+.clabel{font-family:var(--fl);font-size:.59rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.65rem}
+.card h3{font-family:var(--fd);font-size:1.12rem;font-weight:700;margin-bottom:.55rem;color:var(--ink)}
+.card p,.card-gold p{font-size:.94rem;color:var(--ink-mid);line-height:1.82}
+.big-stmt{font-family:var(--fd);font-size:clamp(1.4rem,2.8vw,2rem);font-style:italic;line-height:1.35;color:var(--ink);border-left:4px solid var(--gold);padding:1.4rem 2rem;margin:2rem 0;background:var(--gold-bg)}
+.tline{border-left:3px solid var(--border);padding:.55rem 1.1rem;margin-bottom:.65rem;background:var(--bg-card)}
+.tline.primary{border-color:var(--gold);background:var(--gold-bg)}
+.tline-t{font-family:var(--fd);font-size:1.05rem;font-style:italic;line-height:1.35;color:var(--ink)}
+.tline-s{font-size:.72rem;color:var(--ink-faint);margin-top:.18rem}
+.mantra-box{text-align:center;padding:2.5rem 2rem;border:1px solid var(--border-gold);background:var(--gold-bg);margin:2rem 0}
+.mantra-box .mt{font-family:var(--fd);font-size:clamp(1.1rem,2.2vw,1.6rem);font-style:italic;color:var(--gold);line-height:1.4}
+.mantra-box .ms2{font-size:.74rem;color:var(--ink-faint);margin-top:.8rem}
+.pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1.5rem 0}
+.pain-card{border:1px solid var(--border);background:var(--bg-card);padding:1.1rem 1.3rem}
+.pain-q{font-size:.93rem;font-style:italic;color:var(--ink);margin-bottom:.28rem;line-height:1.5;font-weight:500}
+.pain-s{font-size:.78rem;color:var(--ink-dim);line-height:1.4}
+.psteps{margin:1.5rem 0}
+.pstep{display:grid;grid-template-columns:52px 1fr;gap:.8rem;align-items:start;padding:1.1rem 0;border-bottom:1px solid var(--border)}
+.pstep:last-child{border-bottom:none}
+.pstep-n{font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--ink-faint);line-height:1.1}
+.pstep-t{font-weight:600;font-size:.93rem;color:var(--ink);margin-bottom:.22rem}
+.pstep p{font-size:.89rem;color:var(--ink-mid)}
+.day-card{border:1px solid var(--border);background:var(--bg-card);overflow:hidden;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.day-hdr{display:grid;grid-template-columns:80px 1fr;align-items:stretch}
+.day-num{display:flex;align-items:center;justify-content:center;flex-direction:column;padding:1.5rem}
+.day-num .dn{font-family:var(--fd);font-size:2.4rem;font-weight:900;line-height:1}
+.day-num .dd{font-family:var(--fl);font-size:.51rem;letter-spacing:.14em;text-transform:uppercase;margin-top:.18rem}
+.day-body{padding:1.4rem 2rem;border-left:1px solid var(--border)}
+.day-lbl{font-family:var(--fl);font-size:.59rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:.35rem}
+.day-body h3{font-family:var(--fd);font-size:1.12rem;font-weight:700;margin-bottom:.28rem;color:var(--ink)}
+.day-body .intent{font-size:.81rem;font-style:italic;color:var(--ink-dim);margin-bottom:.7rem}
+.day-body p{font-size:.91rem;color:var(--ink-mid)}
+.day-tw{margin-top:.85rem;padding-top:.7rem;border-top:1px solid var(--border-gold);font-family:var(--fd);font-size:.95rem;font-style:italic;color:var(--gold)}
+.manifesto{border:1px solid var(--border-gold);background:var(--gold-bg);padding:3rem;position:relative}
+.manifesto::before{content:'\201C';font-family:var(--fd);font-size:8rem;color:var(--gold-dim);opacity:.2;position:absolute;top:-.5rem;left:1.5rem;line-height:1}
+.manifesto p{font-size:.98rem;line-height:1.95;color:var(--ink-mid);margin-bottom:.8rem;position:relative;z-index:1}
+.manifesto p:last-child{margin-bottom:0}
+.manifesto p.big{font-family:var(--fd);font-size:1.22rem;font-style:italic;color:var(--ink)}
+.pitch-arc{margin:1.5rem 0}
+.parc{display:grid;grid-template-columns:58px 1fr;align-items:start;padding:1.1rem 0;border-bottom:1px solid var(--border)}
+.parc:last-child{border-bottom:none}
+.parc-b{display:flex;flex-direction:column;align-items:center;gap:2px;padding-top:.1rem}
+.parc-day{font-family:var(--fl);font-size:.57rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faint)}
+.parc-n{font-family:var(--fd);font-size:1.45rem;font-weight:700;color:var(--gold);line-height:1}
+.parc-t{font-weight:600;font-size:.92rem;color:var(--ink);margin-bottom:.27rem}
+.parc p{font-size:.89rem;color:var(--ink-mid)}
+.obj-list{margin:1.5rem 0}
+.obj-item{border:1px solid var(--border);background:var(--bg-card);padding:1.2rem 1.4rem;margin-bottom:.7rem}
+.obj-q{font-size:.85rem;font-style:italic;color:var(--ink-mid);margin-bottom:.5rem;border-left:3px solid var(--border-gold);padding-left:.75rem}
+.obj-lbl{font-family:var(--fl);font-size:.57rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.27rem}
+.obj-a{font-size:.91rem;color:var(--ink)}
+.copy-box{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--gold);padding:2rem 2.2rem;margin:1rem 0;position:relative}
+.copy-box::before{content:attr(data-format);position:absolute;top:-.55rem;left:1.5rem;font-family:var(--fl);font-size:.57rem;letter-spacing:.17em;text-transform:uppercase;background:var(--bg-card);padding:0 .5rem;color:var(--gold)}
+.copy-box p{font-size:.93rem;color:var(--ink-mid);line-height:1.82;margin-bottom:.65rem}
+.copy-box p:last-child{margin-bottom:0}
+.case-card{background:var(--bg-card);border:1px solid var(--border);padding:1.5rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),transparent)}
+.case-name{font-family:var(--fl);font-size:.88rem;font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:.65rem}
+.case-nums{display:flex;gap:.45rem;align-items:center;margin-bottom:.65rem;flex-wrap:wrap}
+.cn{font-family:var(--fd);font-size:1.1rem;font-weight:700}
+.cn.lo{color:var(--ink-faint)}.cn.hi{color:var(--gold)}
+.ca{color:var(--ink-faint);font-size:.73rem}
+.case-q{font-size:.82rem;font-style:italic;color:var(--ink-mid);border-left:2px solid var(--border-gold);padding-left:.75rem}
+.case-use{font-size:.76rem;color:var(--ink-faint);margin-top:.65rem}
+.case-use strong{color:var(--gold-dim)}
+.angle-card{background:var(--bg-card);border:1px solid var(--border);overflow:hidden;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.angle-hdr{padding:1.3rem 2rem 1.1rem;border-bottom:1px solid var(--border);background:var(--bg-lift)}
+.angle-num{font-family:var(--fl);font-size:.58rem;letter-spacing:.24em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:.27rem}
+.angle-name{font-family:var(--fd);font-size:1.12rem;font-weight:700;margin-bottom:.14rem;color:var(--ink)}
+.angle-obj{font-size:.79rem;color:var(--ink-dim);font-style:italic}
+.angle-body{padding:1.3rem 2rem}
+.angle-row{margin-bottom:.85rem;padding-bottom:.85rem;border-bottom:1px solid var(--border)}
+.angle-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.ar-lbl{font-family:var(--fl);font-size:.57rem;letter-spacing:.17em;text-transform:uppercase;color:var(--gold);margin-bottom:.25rem}
+.angle-row p{font-size:.88rem;color:var(--ink-mid)}
+.akey{background:var(--gold-bg);border:1px solid var(--border-gold);padding:.75rem 1rem;margin-top:.35rem;font-size:.9rem;font-style:italic;color:var(--ink)}
+.swatches{display:flex;gap:1rem;flex-wrap:wrap;margin:1.5rem 0}
+.sw{flex:1;min-width:90px}
+.sw-col{height:70px;border-radius:2px;margin-bottom:.55rem;border:1px solid var(--border)}
+.sw-name{font-family:var(--fl);font-size:.71rem;font-weight:600;color:var(--ink)}
+.sw-hex{font-family:var(--fl);font-size:.68rem;color:var(--gold);margin-top:.08rem}
+.sw-use{font-size:.68rem;color:var(--ink-faint);margin-top:.18rem;line-height:1.35}
+.type-spec{border:1px solid var(--border);padding:2rem;margin-bottom:1.1rem;background:var(--bg-card)}
+.type-lbl{font-family:var(--fl);font-size:.58rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:.9rem}
+.type-meta{font-size:.7rem;color:var(--ink-faint);margin-top:.65rem;font-family:var(--fl);letter-spacing:.09em}
+.gloss-item{display:flex;align-items:flex-start;gap:.75rem;padding:.65rem .95rem;border:1px solid var(--border);background:var(--bg-card);font-size:.87rem;margin-bottom:.38rem}
+.gloss-item.no{border-color:#F0D8D8;background:#FFFAFA}
+.gi{font-size:.84rem;flex-shrink:0;margin-top:.1rem}
+.gt{color:var(--ink-mid);line-height:1.5}
+.gt strong{color:var(--ink);font-weight:500}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+.do-box{padding:1.4rem;border:1px solid #C8E6C8;background:#F5FBF5}
+.dont-box{padding:1.4rem;border:1px solid #F0C8C8;background:#FBF5F5}
+.do-lbl{font-family:var(--fl);font-size:.58rem;letter-spacing:.18em;color:#3A7A3A;text-transform:uppercase;margin-bottom:.65rem}
+.dont-lbl{font-family:var(--fl);font-size:.58rem;letter-spacing:.18em;color:#A03030;text-transform:uppercase;margin-bottom:.65rem}
+.do-box p,.dont-box p{font-size:.87rem;color:var(--ink-mid)}
+.do-box p strong,.dont-box p strong{font-weight:600;color:var(--ink)}
+.tag-gold{display:inline-block;font-family:var(--fl);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;padding:.2rem .62rem;border:1px solid var(--border-gold);color:var(--gold);margin:.18rem;background:var(--gold-bg)}
+.tag-no{display:inline-block;font-family:var(--fl);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;padding:.2rem .62rem;border:1px solid #F0C8C8;color:#A03030;margin:.18rem;background:#FBF5F5}
+.print-note{text-align:center;padding:3rem 5rem;border-top:1px solid var(--border);font-size:.79rem;color:var(--ink-faint);background:var(--bg-lift)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.clbl{animation:fadeUp .7s ease both}
+.ctitle{animation:fadeUp .7s .1s ease both}
+.csub{animation:fadeUp .7s .2s ease both}
+.cmeta{animation:fadeUp .7s .3s ease both}
+@media(max-width:900px){.sidebar{display:none}.main{margin-left:0}section{padding:3rem 1.5rem}.cover{padding:3rem 1.5rem}.g2,.g3,.pain-grid,.do-dont{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+<div class="sb-logo"><div class="ms">M&amp;S</div><div class="yr">BRANDBOOK · 2026</div></div>
+<div class="nav-sec"><div class="nav-sec-lbl">Fundação</div>
+<a class="nav-link" href="#s1">01 · O Evento</a>
+<a class="nav-link" href="#s2">02 · Big Idea</a>
+<a class="nav-link" href="#s3">03 · O Movimento</a>
+<a class="nav-link" href="#s4">04 · Dores</a>
+<a class="nav-link" href="#s5">05 · Problema Oculto</a>
+</div>
+<div class="nav-sec"><div class="nav-sec-lbl">Narrativa</div>
+<a class="nav-link" href="#s6">06 · Narrativa Central</a>
+<a class="nav-link" href="#s7">07 · Jornada dos 3 Dias</a>
+<a class="nav-link" href="#s8">08 · Manifesto</a>
+<a class="nav-link" href="#s9">09 · Arco do Pitch</a>
+<a class="nav-link" href="#s10">10 · Mapa de Objeções</a>
+<a class="nav-link" href="#s11">11 · Copy Principal</a>
+</div>
+<div class="nav-sec"><div class="nav-sec-lbl">Prova</div>
+<a class="nav-link" href="#s12">12 · Casos Reais</a>
+</div>
+<div class="nav-sec"><div class="nav-sec-lbl">Visual</div>
+<a class="nav-link" href="#s13">13 · Identidade Visual</a>
+</div>
+<div class="nav-sec"><div class="nav-sec-lbl">Comunicação</div>
+<a class="nav-link" href="#s14">14 · Tom e Linguagem</a>
+<a class="nav-link" href="#s15">15 · Os 3 Ângulos</a>
+<a class="nav-link" href="#s16">16 · Aplicações</a>
+</div>
+</nav>
+
+<main class="main">
+
+<div class="cover">
+<div class="cover-bg"></div><div class="cover-grid"></div>
+<div class="clbl">Documento de Marca · Confidencial · 2026</div>
+<h1 class="ctitle">Master<br>and <span>Scale</span></h1>
+<p class="csub">Brandbook 2026 — Narrativa, Identidade e Comunicação</p>
+<div class="cmeta">
+<div><div class="lbl">Edição</div><div class="val">4.ª · 2026</div></div>
+<div><div class="lbl">Local</div><div class="val">Lagoas Park Hotel · Oeiras, PT</div></div>
+<div><div class="lbl">Datas</div><div class="val">26–29 Novembro 2026</div></div>
+<div><div class="lbl">Uso</div><div class="val">Equipa · Copy · Design</div></div>
+</div></div>
+<!-- S1 O EVENTO -->
+<section id="s1">
+<div class="ey">01</div>
+<h2>O <em>Evento</em></h2>
+<p class="intro">O que é o Master and Scale, para quem existe e o contexto em que opera. A base de qualquer comunicação começa aqui.</p>
+<div class="g2" style="margin-bottom:1.4rem">
+<div class="card"><div class="clabel">Definição</div><h3>O que é</h3><p>O maior evento presencial da comunidade do Luciano Larrossa. Três dias em que gestores de tráfego e profissionais do digital saem do isolamento e entram num ambiente onde o crescimento é o padrão. Não é uma conferência. Não é um curso. É o ambiente que faz as pessoas fazerem o que já sabem que precisam de fazer.</p></div>
+<div class="card"><div class="clabel">Formato 2026</div><h3>Estrutura</h3><p><strong>26 Nov — Dia Premium:</strong> Um dia de experiência para networking. Um momento de convívio sem palco, sem estrutura, num clima leve e descontraído.</p><p style="margin-top:.6rem"><strong>27–29 Nov — Evento Completo:</strong> Ted Talks de alunos, premiação de placas, palestras de método e pitch do Acelerator.</p></div>
+</div>
+<div class="g2" style="margin-bottom:1.4rem">
+<div class="card"><div class="clabel">Para quem é</div><div style="display:flex;flex-direction:column;gap:.38rem;margin-top:.28rem"><div class="tag-gold">Gestor de tráfego freelancer</div><div class="tag-gold">Profissional do digital em transição</div><div class="tag-gold">Empreendedor digital sem processo</div><div class="tag-gold">Aluno do Acelerator em crescimento</div><div class="tag-gold">Quem decidiu que o digital é o caminho</div></div><p style="margin-top:.85rem;font-size:.84rem">Mesmo que esteja a começar — o que importa é a intenção de construir.</p></div>
+<div class="card"><div class="clabel">Para quem não é</div><div style="display:flex;flex-direction:column;gap:.38rem;margin-top:.28rem"><div class="tag-no">Quem procura fórmulas rápidas</div><div class="tag-no">Quem está indeciso entre digital e tradicional</div><div class="tag-no">Quem não está disposto a aparecer</div><div class="tag-no">Quem precisa de garantias antes de agir</div><div class="tag-no">Quem não quer investir tempo e energia</div></div></div>
+</div>
+<div class="card" style="border-left:3px solid var(--gold)"><div class="clabel">Contexto Cultural — Portugal</div><p>Portugal educa para o certo, o estável, o garantido. Empreender ainda carrega peso social. O digital não é mainstream — os portugueses ainda não são os maiores compradores online. Por isso muitos tentam crescer sem se expor — e por não se exporem, não crescem.</p><p style="margin-top:.65rem">O Master and Scale existe para criar um espaço onde é seguro ser ambicioso. Sem o barulho dos eventos de palco. Com método, verdade e plano.</p><p style="margin-top:.65rem;font-style:italic;color:var(--gold)">"Não é preciso gritar para construir algo grande. Basta fazer direito."</p></div>
+</section>
+
+<!-- S2 BIG IDEA -->
+<section id="s2">
+<div class="ey">02</div>
+<h2>A <em>Big Idea</em></h2>
+<p class="intro">A ideia central que ancora toda a comunicação. Não é um slogan — é uma verdade contraintuitiva que reorganiza a forma como o participante vê o seu próprio problema.</p>
+<div class="big-stmt" style="font-size:clamp(1.5rem,3vw,2.1rem)">"O problema não é o que não sabes.<br>O problema é o que sabes e ainda não fizeste."</div>
+<div class="g2" style="margin-top:1.8rem;margin-bottom:1.8rem">
+<div class="card"><div class="clabel">O que esta ideia faz</div><p style="margin-bottom:.65rem">Remove a desculpa de "preciso de aprender mais" — a pessoa já tem conhecimento suficiente para avançar.</p><p style="margin-bottom:.65rem">Instala a responsabilidade pessoal — o bloqueio não está no mercado nem no produto. Está na pessoa.</p><p>Cria a abertura para a solução — se o problema é a paralisia, o ambiente certo dissolve-a. E esse ambiente é o evento.</p></div>
+<div class="card"><div class="clabel">Como usar na comunicação</div><p style="margin-bottom:.65rem">É a premissa que precede qualquer pitch. Antes de apresentar o evento, a pessoa precisa de se reconhecer nesta ideia.</p><p style="margin-bottom:.65rem">Funciona especialmente bem para o público ACC — que já tem formação, já teve algum resultado, mas está travado. Para eles, esta frase é um espelho.</p><p>Para o público GT usar de forma mais suave, contextualizada pela oportunidade do mercado digital em Portugal.</p></div>
+</div>
+<div class="ey" style="margin-bottom:1rem">Taglines derivadas da Big Idea</div>
+<div class="tline primary"><div class="tline-t">"Você não precisa aprender mais nada. Você precisa de um ambiente que te faça finalmente fazer."</div><div class="tline-s">Principal · Páginas de venda, lives, comunicação geral</div></div>
+<div class="tline"><div class="tline-t">"Ação traz clareza. O evento traz a ação."</div><div class="tline-s">Compacta · Stories, cortes, copy curto · Frase do Luciano</div></div>
+<div class="tline"><div class="tline-t">"O mundo está a mudar. Você vai continuar parado à espera do momento certo?"</div><div class="tline-s">Tensão · Lives de alunos internos, grupos WhatsApp, ângulo GT</div></div>
+<div class="mantra-box"><div class="mt">"Cada dia que não decides,<br>estás a escolher ficar onde estás."</div><div class="ms2">Mantra do evento · Frase do Luciano · Usar no encerramento do pitch e no Domingo</div></div>
+</section>
+
+<!-- S3 O MOVIMENTO -->
+<section id="s3">
+<div class="ey">03</div>
+<h2>O <em>Movimento</em></h2>
+<p class="intro">O participante não compra um bilhete — escolhe um lado. A narrativa posiciona o Master and Scale como o evento de quem decidiu construir enquanto o resto espera.</p>
+<div class="big-stmt">"Os que escolhem construir —<br>enquanto o resto espera."</div>
+<div class="g2" style="margin-top:1.8rem">
+<div class="card"><div class="clabel">Quem pertence ao movimento</div><p>Pessoas que, mesmo sem todas as respostas, escolheram avançar. Que foram criadas para o seguro — e escolheram o possível. Que têm medo e agem na mesma. Que constroem em silêncio enquanto outros esperam pelo momento perfeito.</p></div>
+<div class="card"><div class="clabel">Contra o quê</div><p>Não é contra uma pessoa. É contra o modelo da média: trocar tempo por dinheiro sem estrutura, operar como prestador quando se deveria pensar como empresário. A paralisia disfarçada de prudência. Saber o que fazer — e não fazer.</p></div>
+</div>
+</section>
+
+<!-- S4 DORES -->
+<section id="s4">
+<div class="ey">04</div>
+<h2>Identificação <em>de Dores</em></h2>
+<p class="intro">As frases que o participante diz a si mesmo mas raramente diz em voz alta. A comunicação começa aqui — quando a pessoa se reconhece, para de rolar o feed.</p>
+<div class="pain-grid">
+<div class="pain-card"><div class="pain-q">"Sei o que tenho de fazer. Não consigo fazer."</div><div class="pain-s">A paralisia mais comum — e a menos dita. É a dor central de toda a narrativa. Usar na abertura de qualquer comunicação.</div></div>
+<div class="pain-card"><div class="pain-q">"Quero prospectar, mas congelo antes de ligar."</div><div class="pain-s">Manifestação técnica da paralisia. Medo disfarçado de problema operacional. Muito presente no público ACC.</div></div>
+<div class="pain-card"><div class="pain-q">"Ainda não tenho resultado — o evento não é para mim."</div><div class="pain-s">A desculpa mais perigosa porque parece racional. É o filtro que a narrativa precisa de dissolver antes de apresentar qualquer oferta.</div></div>
+<div class="pain-card"><div class="pain-q">"Já tentei várias coisas. E se não funcionar de novo?"</div><div class="pain-s">Fadiga de tentativas — a pessoa protege o que resta de esperança não tentando mais. Presente em quem está há mais de 1 ano sem consistência.</div></div>
+<div class="pain-card"><div class="pain-q">"Faturei uns meses bem, depois caiu. Não tenho consistência."</div><div class="pain-s">O ciclo de montanha-russa. Revela ausência de processo, não de talento. Usar quando falar de método e estrutura.</div></div>
+<div class="pain-card"><div class="pain-q">"Trabalho muito para ganhar pouco. Estou a correr numa roda."</div><div class="pain-s">A armadilha do operacional — troca tempo por dinheiro sem construir nada escalável. Presente no ACC mais avançado e no GT.</div></div>
+<div class="pain-card"><div class="pain-q">"Quero largar o emprego — mas tenho medo de falhar."</div><div class="pain-s">O peso cultural português: o seguro versus o possível. Usar com validação — nunca com pressão.</div></div>
+<div class="pain-card"><div class="pain-q">"Estou sozinho nisso. Não tenho com quem falar que entenda."</div><div class="pain-s">O isolamento do gestor independente. É a dor que o evento resolve antes mesmo de começar. Usar para o público GT.</div></div>
+</div>
+<div class="card" style="margin-top:1.4rem;border-left:3px solid var(--gold)"><div class="clabel">Como usar o mapa de dores</div><p>A narrativa não usa todas as dores ao mesmo tempo. Para lives de ativação de alunos internos: dores de consistência e operacional. Para comunicação externa e GT: dores de paralisia e isolamento. Para o repitch do Domingo: dores de vergonha e fadiga de tentativas.</p></div>
+</section>
+
+<!-- S5 PROBLEMA OCULTO -->
+<section id="s5">
+<div class="ey">05</div>
+<h2>O Problema <em>Oculto</em></h2>
+<p class="intro">O problema que o participante acredita ter raramente é o problema real. Nomear o problema oculto é o momento em que a narrativa passa de "mais um evento" para "este evento foi feito para mim".</p>
+<div class="psteps">
+<div class="pstep"><div class="pstep-n">1</div><div><div class="pstep-t">O problema aparente — o que ele acredita</div><p>"Preciso de aprender mais tráfego. Preciso de mais clientes. Preciso de uma estratégia melhor." Ele diagnostica o problema como técnico ou de mercado — e vai atrás de mais conteúdo, mais cursos, mais informação. É um ciclo sem fim.</p></div></div>
+<div class="pstep"><div class="pstep-n">2</div><div><div class="pstep-t">O problema real — o que a narrativa revela</div><p>Não é falta de técnica. É falta de estrutura de negócio e de ambiente. Opera como prestador quando precisava de pensar como empresário. Sabe fazer tráfego mas não sabe construir um negócio sustentável em cima disso.</p></div></div>
+<div class="pstep"><div class="pstep-n">3</div><div><div class="pstep-t">O problema oculto — o que a narrativa precisa de nomear</div><p>Está sozinho. Num mercado que ainda não é mainstream em Portugal, sem referências próximas, sem comunidade que entenda a linguagem, sem prova visual de que é possível para alguém como ele. Não é falta de método — é falta de espelho. E sem espelho, a pessoa encolhe.</p></div></div>
+<div class="pstep"><div class="pstep-n">4</div><div><div class="pstep-t">O agravante cultural — o que só existe em Portugal</div><p>A sociedade portuguesa educa para o certo, o estável, o garantido. Empreender ainda carrega peso social. Falhar ainda é visto como desonra, não como dado. Por isso muitos tentam crescer sem se expor — e por não se exporem, não crescem. O evento existe para criar um espaço onde é seguro ser ambicioso.</p></div></div>
+</div>
+</section>
+<!-- S6 NARRATIVA CENTRAL -->
+<section id="s6">
+<div class="ey">06</div>
+<h2>A Narrativa <em>Central</em></h2>
+<p class="intro">A estrutura de mensagem que ancora toda a comunicação. Cada peça de copy deve poder ser rastreada até aqui.</p>
+<div class="g2" style="margin-bottom:1.5rem">
+<div class="card"><div class="clabel">Posicionamento</div><h3>O que o evento realmente vende</h3><p>Não vende conteúdo. Não vende palestras. Vende o que acontece quando uma pessoa que está travada entra num ambiente onde toda a gente está em movimento — e descobre que o que a bloqueava não era falta de método, era falta de ambiente.</p></div>
+<div class="card"><div class="clabel">O mecanismo</div><h3>Por que o ambiente funciona</h3><p>Sozinhos, a maioria de nós não consegue fazer o que sabe que precisa de ser feito. Dentro de um grupo com objetivo comum, a mudança de comportamento acontece de forma que isoladamente é impossível. O evento é o ambiente que cria esse grupo.</p></div>
+</div>
+<div class="card" style="border-left:3px solid var(--gold)"><div class="clabel">O exemplo que explica o mecanismo</div><p>A Joana não aprendeu numa palestra que os clientes de contabilidade dela podiam ser clientes de tráfego. O Gonçalo e o Miguel não leram em nenhum livro que deviam dividir papéis — um no comercial, outro no operacional. Esses insights aconteceram no ambiente do evento. Não no conteúdo. No ambiente. É por isso que o evento não é sobre aprender — é sobre viver três dias dentro do contexto certo e sair diferente.</p></div>
+</section>
+
+<!-- S7 JORNADA 3 DIAS -->
+<section id="s7">
+<div class="ey">07</div>
+<h2>Jornada dos <em>3 Dias</em></h2>
+<p class="intro">Cada dia tem uma intenção emocional específica que conduz o participante até à decisão. A venda do Acelerator não acontece no pitch — acontece quando o participante chega ao Domingo já tendo percorrido o arco completo.</p>
+<div class="day-card">
+<div class="day-hdr">
+<div class="day-num" style="background:var(--gold)"><span class="dn" style="color:var(--black)">1</span><span class="dd" style="color:var(--black)">Sexta</span></div>
+<div class="day-body">
+<div class="day-lbl">Fase — Identificação</div>
+<h3>"Você pode. E a prova está aqui à sua frente."</h3>
+<p class="intent">Intenção: destruir o "não é para mim" e instalar o pertencimento</p>
+<p>O participante chega com a barreira pronta: ainda não tenho resultado suficiente, o evento é para quem já chegou lá. O Dia 1 existe para demolir isso — não com palavras do Luciano, mas com prova de par social.</p>
+<p style="margin-top:.55rem">Os Ted Talks de alunos são o momento mais estratégico do dia: o impacto não é o conteúdo da palestra, é o reconhecimento — "aquela pessoa era igual a mim." A premiação de placas é o pico emocional: quem ainda não tem placa sente a possibilidade de que um dia será a sua vez.</p>
+<div class="day-tw">"Se eles conseguiram, é porque é possível. E se é possível, não é questão de poder — é questão de quando."</div>
+</div></div></div>
+<div class="day-card">
+<div class="day-hdr">
+<div class="day-num" style="background:var(--bg-card);border-right:1px solid var(--border)"><span class="dn" style="color:var(--ink-mid)">2</span><span class="dd" style="color:var(--ink-faint)">Sábado</span></div>
+<div class="day-body">
+<div class="day-lbl">Fase — Revelação</div>
+<h3>"Existe método. E você está mais perto do que pensa."</h3>
+<p class="intent">Intenção: clareza técnica + urgência para decidir</p>
+<p>A crença instalada no Dia 1 cria abertura. O Sábado entra com estrutura: processo comercial, prospeção, como conduzir reuniões, como fechar. As palestras chegam quando a plateia está receptiva.</p>
+<p style="margin-top:.55rem">A mensagem implícita: "Você já sabe isto. O que falta é você fazer." O Ciclo do Sim prepara o pitch: "Tens três escolhas. Não fazer nada. Tentar sozinho. Ou seguir pelo atalho que eu criei."</p>
+<div class="day-tw">"Eu sei o que precisa ser feito. A questão agora é quanto tempo quero levar para chegar lá."</div>
+</div></div></div>
+<div class="day-card">
+<div class="day-hdr">
+<div class="day-num" style="background:var(--bg-card);border-right:1px solid var(--border-gold)"><span class="dn" style="color:var(--gold)">3</span><span class="dd" style="color:var(--gold-dim)">Domingo</span></div>
+<div class="day-body">
+<div class="day-lbl">Fase — Decisão</div>
+<h3>"Agora decides o tamanho da vida que queres viver."</h3>
+<p class="intent">Intenção: responsabilidade pessoal + comprometimento irrevogável</p>
+<p>O Domingo muda de tom. Não é mais sobre prova ou método — é sobre escolha. A palestra de desenvolvimento pessoal (historicamente a mais marcante do evento, a que mais gera comprometimento) instala a pergunta: "O que está a impedir-te de decidir agora?"</p>
+<p style="margin-top:.55rem">A Palestra Sincerona do Luciano é o momento mais autêntico dos três dias. Sem slides, olhando para a plateia e dizendo o que vê. O Repitch nomeia as três objeções que sobraram com exemplos de alunos reais. O brinde final celebra quem decidiu e cria o peso da escolha para quem está na borda.</p>
+<div class="day-tw">"Cada dia que não decido, estou a escolher ficar onde estou."</div>
+</div></div></div>
+</section>
+
+<!-- S8 MANIFESTO -->
+<section id="s8">
+<div class="ey">08</div>
+<h2>O <em>Manifesto</em></h2>
+<p class="intro">O texto que cria identidade antes de qualquer oferta. Quem lê e se reconhece já pertence ao movimento. Usar na página do evento, na abertura de apresentações e em comunicação de marca.</p>
+<div class="manifesto">
+<p class="big">Há um tipo de pessoa que, quando tudo está incerto, não recua. Escolhe avançar.</p>
+<p>Não porque seja corajosa. Não porque tenha todas as respostas. Mas porque sabe que ficar parada custa mais do que avançar.</p>
+<p>Em Portugal, crescemos a aprender que o seguro é o certo. Que o risco é para os imprudentes. Que quem falha, falhou. E assim, muitos ficaram à espera do momento perfeito — que nunca chegou.</p>
+<p>Mas há quem não esperou.</p>
+<p>Há quem, com medo e tudo, ligou para o cliente. Montou o processo. Perdeu clientes, voltou a prospectar. Teve meses maus, continuou. E hoje fatura o que há dois anos parecia impossível.</p>
+<p>Não são super-heróis. São pessoas comuns que tomaram uma decisão incomum: construir, mesmo sem garantias.</p>
+<p class="big">O Master and Scale é o evento dessas pessoas.</p>
+<p>Aqui não há palco para promessas impossíveis. Há método, verdade e plano. Há alunos que estavam onde você está — e subiram ao palco para mostrar que é possível. Há um Luciano que não vai fingir que o caminho é fácil — mas vai provar que existe.</p>
+<p>Se vieste à procura de mais uma fórmula, este não é o teu lugar.</p>
+<p>Se vieste porque sabes que o problema não é o mercado — é que ainda não fizeste o que sabes que precisas de fazer — <strong style="color:var(--ink)">bem-vindo. Este evento foi feito para ti.</strong></p>
+</div>
+</section>
+<!-- S9 ARCO DO PITCH -->
+<section id="s9">
+<div class="ey">09</div>
+<h2>Arco do <em>Pitch</em></h2>
+<p class="intro">O pitch do Acelerator não é um momento — é uma construção de 3 dias. Quando chega o CTA, o "sim" já foi preparado em camadas. O que o Sábado faz é apenas nomear a decisão que o participante já tomou emocionalmente.</p>
+<div class="pitch-arc">
+<div class="parc"><div class="parc-b"><span class="parc-day">Sex</span><span class="parc-n">1</span></div><div><div class="parc-t">Instalar o ambiente — sem mencionar o produto</div><p>As pessoas no palco passaram por um processo. Não foi sorte. O participante começa a querer saber qual foi esse processo — sem ser empurrado para a pergunta. A semente é plantada pelo que é mostrado, não pelo que é dito. Nunca mencionar o Acelerator no Dia 1.</p></div></div>
+<div class="parc"><div class="parc-b"><span class="parc-day">Sáb</span><span class="parc-n">2</span></div><div><div class="parc-t">Pitch principal — foco exclusivo no Premium</div><p>Ciclo do Sim + analogia do avião + apresentação do Acelerator como o atalho com acompanhamento. Promessa central: acompanhamento para implementar e chegar aos 2k euros de faturação. Um CTA, um link, uma decisão. Foco no Premium — não no Start, não no VIP. Analogia do avião: "Você vai chegar ao mesmo lugar. Mas pode ir económica ou executiva."</p></div></div>
+<div class="parc"><div class="parc-b"><span class="parc-day">Dom</span><span class="parc-n">3</span></div><div><div class="parc-t">Repitch — nomear as objeções com prova de par social</div><p>Cada objeção apresentada com um aluno real que a tinha e foi mesmo assim. As três objeções a nomear: "Não vou conseguir" / "Preciso de falar com o meu cônjuge" / "Já tentei e não funcionou." Brinde no final — celebrar quem decidiu cria visibilidade do movimento. A frase de encerramento não é CTA — é espelho.</p></div></div>
+<div class="parc"><div class="parc-b"><span class="parc-day">Pós</span><span class="parc-n">4</span></div><div><div class="parc-t">Comercial em 24h — abertura não comercial</div><p>Primeiro contacto não é venda: <em>"Vi que esteve no Master and Scale. Qual foi o maior insight que levou?"</em> Quem responde está aquecido. A conversa comercial entra na segunda mensagem — sem ruptura de tom, sem pressão de abertura.</p></div></div>
+</div>
+</section>
+
+<!-- S10 MAPA DE OBJEÇÕES -->
+<section id="s10">
+<div class="ey">10</div>
+<h2>Mapa de <em>Objeções</em></h2>
+<p class="intro">Respostas que não combatem — redirecionam. Para o público português que detecta pressão de venda e recua, combater uma objeção cria resistência. Redirecioná-la usa-a como entrada.</p>
+<div class="obj-list">
+<div class="obj-item"><div class="obj-q">"Não tenho resultado ainda — o evento não é para mim."</div><div class="obj-lbl">Nomear antes que pensem</div><div class="obj-a">"Esse pensamento é exactamente a razão pela qual precisas de estar lá. A Beatriz pensava o mesmo. Foram mesmo assim. O evento não é para quem já chegou — é para quem decidiu que vai chegar. E essa decisão começa por aparecer."</div></div>
+<div class="obj-item"><div class="obj-q">"Não vejo por que ir presencialmente — posso aprender online."</div><div class="obj-lbl">Atacar a premissa, não o argumento</div><div class="obj-a">"Não vais lá para aprender. Vais para desbloquear o que já sabes e não consegues fazer. A Joana não aprendeu numa palestra que os clientes de contabilidade podiam ser clientes de tráfego. O Gonçalo e o Miguel não leram em nenhum livro que deviam dividir papéis. Esses insights aconteceram no ambiente. E isso não acontece numa tela."</div></div>
+<div class="obj-item"><div class="obj-q">"Não sei o que vai ser entregue — é muito vago."</div><div class="obj-lbl">Trocar funcionalidades por perguntas concretas</div><div class="obj-a">"Como sair dos 1k para os 5k com consistência? Como prospectar sem depender de indicações? Como não desistir quando os resultados demoram? Se estas são as tuas perguntas — o evento foi feito para ti."</div></div>
+<div class="obj-item"><div class="obj-q">"Custa o equivalente a um mês de faturação — não posso arriscar."</div><div class="obj-lbl">Lógica de investimento, não de custo</div><div class="obj-a">"Custa um ou dois clientes teus. Se saíres daqui a saber como fechar mais um cliente por mês — pagaste o evento no primeiro mês. A questão não é se podes. É se te podes dar ao luxo de não ir."</div></div>
+<div class="obj-item"><div class="obj-q">"Preciso de falar com o meu cônjuge / sócio."</div><div class="obj-lbl">Transformar a objeção em convite</div><div class="obj-a">"Então traz-o. Porque a decisão fica muito mais fácil quando os dois veem a mesma coisa ao mesmo tempo." — Campanha de segunda cadeira como resposta directa a esta objeção.</div></div>
+<div class="obj-item"><div class="obj-q">"Já fui no ano passado — o que vai ser diferente?"</div><div class="obj-lbl">Mostrar que a pessoa é diferente, não o evento</div><div class="obj-a">"Às vezes vais ouvir a mesma coisa — mas és uma pessoa diferente de quem eras. E o que antes não entendias, agora faz sentido. Não é sobre o que o evento entrega. É sobre quem és quando lá chegas."</div></div>
+</div>
+</section>
+
+<!-- S11 COPY PRINCIPAL -->
+<section id="s11">
+<div class="ey">11</div>
+<h2>Copy <em>Principal</em></h2>
+<p class="intro">O texto base para páginas de venda, abertura de lives e comunicação geral. Entrada pelas dores reais, sem motivação de superfície. Tom europeu directo — firme sem gritar, inspirador sem prometer milagres.</p>
+<div class="copy-box" data-format="Copy principal · Página de venda / Abertura de live">
+<p>Você já sabe o que precisa de fazer.</p>
+<p>Sabe que precisa de prospectar mais. Sabe que precisa de estruturar o processo comercial. Sabe que precisa de parar de esperar pelo momento certo e começar agora.</p>
+<p>E ainda assim não faz.</p>
+<p>Não é falta de vontade. Não é preguiça. É que sozinhos, a maioria de nós não consegue fazer o que sabe que precisa de ser feito. Precisamos de ambiente. Precisamos de pessoas que estão no mesmo caminho. Precisamos de ver com os nossos próprios olhos que é possível — para alguém como nós.</p>
+<p>O Master and Scale existe para isso.</p>
+<p>Em 3 dias, vai estar numa sala com gestores de tráfego que estavam exactamente onde você está — com as mesmas dúvidas, os mesmos medos, as mesmas desculpas. E que hoje estão no palco a contar como saíram dos 1.500€ para os 12.000€ por mês. Não porque aprenderam algo novo. Porque finalmente fizeram o que já sabiam.</p>
+<p>Aqui não há palco para super-heróis digitais. Há método, verdade e plano. O Luciano não vai prometer que é fácil — vai mostrar que é possível.</p>
+<p><strong>Você não precisa de mais um curso. Precisa de um ambiente que te faça agir. Master and Scale. O evento que te faz finalmente fazer.</strong></p>
+</div>
+<div class="ey" style="margin-top:2rem;margin-bottom:1rem">Variações por contexto</div>
+<div class="copy-box" data-format="Versão curta · Stories / Cortes">
+<p>Há um padrão que vemos todos os anos. Os alunos que mais crescem são os que aparecem em todos os momentos.</p>
+<p>Não é coincidência. É que o ambiente certo faz-te fazer o que sozinho não consegues fazer.</p>
+<p>O Master and Scale. 26 a 29 de Novembro. Oeiras.</p>
+</div>
+<div class="copy-box" data-format="Versão tensão · Grupos WhatsApp / Alunos internos">
+<p>O mundo está a mudar. Todos os dias aparecem novos gestores no mercado, novos clientes a fazer perguntas, novas ferramentas que mudam o jogo.</p>
+<p>E tu estás onde estás.</p>
+<p>Não porque não sejas capaz. Porque ainda não estiveste no ambiente certo. O Master and Scale existe para isso.</p>
+</div>
+<div class="copy-box" data-format="Versão GT · Quem está em transição de carreira">
+<p>Há dez anos, gerir tráfego pago era coisa de agências grandes. Hoje qualquer pessoa com método pode ter um negócio digital a faturar mais do que a maioria dos empregos em Portugal.</p>
+<p>Em Portugal ainda somos conservadores em relação a isto — e por isso os que entram agora, com método e comunidade, estão muito à frente.</p>
+<p>O Master and Scale é o evento onde vais perceber que o caminho existe — e que já estás nele.</p>
+</div>
+</section>
+<!-- S12 CASOS REAIS -->
+<section id="s12">
+<div class="ey">12</div>
+<h2>A <em>Prova</em></h2>
+<p class="intro">Casos reais de alunos com resultados documentados. Usar sempre com nome e números — nunca de forma genérica. Cada caso tem um contexto de uso específico.</p>
+<div class="g2" style="margin-bottom:1.1rem">
+<div class="case-card"><div class="case-name">Joana Rodrigues</div><div class="case-nums"><span class="cn lo">€1.500</span><span class="ca">→</span><span class="cn">€7.940</span><span class="ca">→</span><span class="cn hi">€13.400</span></div><p style="font-size:.76rem;color:var(--ink-faint);margin-bottom:.55rem">MAS 2024 → MAS 2025 → Março 2026</p><div class="case-q">"O evento foi o que mudou tudo."</div><p class="case-use"><strong>Usar quando:</strong> falar com público GT/transição. Prova de que quem não estava "no digital" fez a transição com o ambiente certo.</p></div>
+<div class="case-card"><div class="case-name">Jorge Moedas</div><div class="case-nums"><span class="cn lo">€2.500</span><span class="ca">→</span><span class="cn">€9.020</span><span class="ca">→</span><span class="cn hi">€8.557</span></div><p style="font-size:.76rem;color:var(--ink-faint);margin-bottom:.55rem">MAS 2024 → MAS 2025 → Atualmente</p><div class="case-q">Especialidade em IA e automação aplicadas ao tráfego.</div><p class="case-use"><strong>Usar quando:</strong> falar de atualização e acompanhamento do mercado.</p></div>
+<div class="case-card"><div class="case-name">Miguel Conceição</div><div class="case-nums"><span class="cn lo">€600</span><span class="ca">→</span><span class="cn">€3.900</span><span class="ca">→</span><span class="cn hi">€7.124</span></div><p style="font-size:.76rem;color:var(--ink-faint);margin-bottom:.55rem">MAS 2024 → MAS 2025 → Atualmente</p><div class="case-q">"O Master and Scale fez-me ter ainda mais certeza de que não havia outro caminho e de que eu também seria capaz."</div><p class="case-use"><strong>Usar quando:</strong> tratar a objeção de quem está a pensar em desistir.</p></div>
+<div class="case-card"><div class="case-name">Beatriz</div><div class="case-nums"><span class="cn lo">€300</span><span class="ca">→</span><span class="cn">€2.423</span><span class="ca">→</span><span class="cn hi">€10.394</span></div><p style="font-size:.76rem;color:var(--ink-faint);margin-bottom:.55rem">2024 → 2025 → Atualmente</p><div class="case-q">Desbloqueou o medo de prospectar. Subiu ao palco no evento seguinte.</div><p class="case-use"><strong>Usar quando:</strong> tratar a objeção "ainda não tenho resultado para ir".</p></div>
+</div>
+<div class="case-card" style="border-color:var(--border-gold);border-top:3px solid var(--gold)"><div class="case-name">Miguel + Gonçalo (Irmãos Lopo)</div><div class="case-nums"><span class="cn lo">€0</span><span class="ca">→</span><span class="cn">€1.500</span><span class="ca">→</span><span class="cn hi">€12.640</span></div><p style="font-size:.76rem;color:var(--ink-faint);margin-bottom:.55rem">MAS 2023 → MAS 2024 → MAS 2025 · Atualmente: €7.636</p><div class="case-q">"Foi no MAS que o Miguel decidiu ser gestor de tráfego junto com o irmão Gonçalo." Na segunda-feira após o evento dividiram papéis — um no comercial, outro no operacional. Esse insight não veio de uma palestra. Veio do ambiente.</div><p class="case-use"><strong>O caso mais poderoso.</strong> Usar para demonstrar o mecanismo do ambiente. Prova de que o evento gera insights que não existem em conteúdo online.</p></div>
+</section>
+
+<!-- S13 IDENTIDADE VISUAL -->
+<section id="s13">
+<div class="ey">13</div>
+<h2>Identidade <em>Visual</em></h2>
+<p class="intro">Paleta, tipografia e regras de aplicação. Formalização da direcção visual das edições anteriores para uso consistente pela equipa e designers.</p>
+<div class="ey" style="margin-bottom:1rem">Paleta de Cores</div>
+<div class="swatches">
+<div class="sw"><div class="sw-col" style="background:#0A0A0A"></div><div class="sw-name">Black Core</div><div class="sw-hex">#0A0A0A</div><div class="sw-use">Fundo principal. Base de tudo.</div></div>
+<div class="sw"><div class="sw-col" style="background:#111;border-color:#222"></div><div class="sw-name">Black Soft</div><div class="sw-hex">#111111</div><div class="sw-use">Sidebar, navbars, UI secundário.</div></div>
+<div class="sw"><div class="sw-col" style="background:#1E1E1E;border-color:#2a2a2a"></div><div class="sw-name">Black Lift</div><div class="sw-hex">#1E1E1E</div><div class="sw-use">Cards, superfícies elevadas.</div></div>
+<div class="sw"><div class="sw-col" style="background:#C9A84C"></div><div class="sw-name">Gold</div><div class="sw-hex">#C9A84C</div><div class="sw-use">Acento principal. Usar com parcimónia.</div></div>
+<div class="sw"><div class="sw-col" style="background:#E2C97E"></div><div class="sw-name">Gold Light</div><div class="sw-hex">#E2C97E</div><div class="sw-use">Itálico de destaque, manifesto.</div></div>
+<div class="sw"><div class="sw-col" style="background:#F5F2EC"></div><div class="sw-name">White Warm</div><div class="sw-hex">#F5F2EC</div><div class="sw-use">Texto principal. Nunca branco puro.</div></div>
+</div>
+<div class="card" style="margin-top:.9rem;background:var(--bg-card)"><div class="clabel">Regra de Ouro</div><p>O dourado é o único acento. Nunca usar mais de uma cor de acento na mesma peça. Aparece em: logo, títulos de secção, CTAs, números de resultado e linhas decorativas. Nunca em texto corrido. O fundo é sempre escuro.</p></div>
+<div class="divider"></div>
+<div class="ey" style="margin-bottom:1rem">Tipografia</div>
+<div class="type-spec"><div class="type-lbl">Display — Playfair Display · Google Fonts · Gratuito</div><div style="font-family:var(--fd);font-size:2.5rem;font-weight:900;line-height:1;letter-spacing:-.03em">Master and Scale</div><div style="font-family:var(--fd);font-size:1.5rem;font-style:italic;color:var(--gold);margin-top:.28rem">O ambiente que te faz agir.</div><div class="type-meta">Pesos: 400 · 700 · 900 · Itálico disponível · Usar em: títulos, taglines, citações, manifesto, números de destaque</div></div>
+<div class="type-spec"><div class="type-lbl">Corpo — Barlow · Google Fonts · Gratuito</div><div style="font-family:var(--fb);font-size:.98rem;font-weight:300;color:var(--ink-mid);line-height:1.75">Há um padrão que vemos todos os anos. Os alunos que mais crescem são os que aparecem em todos os momentos — encontros, eventos, lives. Não é coincidência. É que o ambiente certo faz-te fazer o que sozinho não consegues fazer.</div><div class="type-meta">Pesos: 300 Light (corpo) · 400 Regular · 500 Medium · 600 SemiBold · Usar em: texto corrido, parágrafos, descrições</div></div>
+<div class="type-spec"><div class="type-lbl">Label — Barlow Condensed · Google Fonts · Gratuito</div><div style="font-family:var(--fl);font-size:1.25rem;letter-spacing:.2em;color:var(--ink);text-transform:uppercase">MASTER AND SCALE · NOVEMBRO 2026 · OEIRAS</div><div class="type-meta">Pesos: 400 · 600 · 700 · Sempre uppercase · Usar em: eyebrows, labels, etiquetas, informações de meta</div></div>
+<div class="divider"></div>
+<div class="ey" style="margin-bottom:1rem">Certo e Errado</div>
+<div class="do-dont">
+<div class="do-box"><div class="do-lbl">✓ Correcto</div><p><strong>Fundo escuro</strong> com texto quente. <strong>Dourado apenas em acentos.</strong> <strong>Contraste de peso tipográfico</strong> (display bold + body light). <strong>Espaço negativo generoso.</strong> Estética sóbria e europeia. Fotografias a preto e branco ou com tom escuro.</p></div>
+<div class="dont-box"><div class="dont-lbl">✗ Errado</div><p><strong>Gradientes coloridos</strong> — roxo, azul néon. <strong>Fundo branco</strong> com texto colorido. <strong>Múltiplos acentos</strong> de cor. <strong>Tipografia genérica</strong> — Arial, Inter, Roboto. <strong>Layouts sobrecarregados.</strong> Estética de evento brasileiro de palco.</p></div>
+</div>
+</section>
+
+<!-- S14 TOM E LINGUAGEM -->
+<section id="s14">
+<div class="ey">14</div>
+<h2>Tom e <em>Linguagem</em></h2>
+<p class="intro">O guia de voz do Master and Scale. Qualquer pessoa da equipa deve conseguir escrever um post, uma mensagem ou um script sem perguntar "como dizemos isto?"</p>
+<div class="g3" style="margin-bottom:1.8rem">
+<div class="card"><div class="clabel">Tom</div><h3>Directo e firme</h3><p>Vai directo ao ponto. Sem rodeios. A primeira frase trabalha. A última convida à acção.</p></div>
+<div class="card"><div class="clabel">Inspiração</div><h3>Sem exageros</h3><p>Inspira pelo que é real — cases concretos, números verdadeiros. Nunca por promessas impossíveis.</p></div>
+<div class="card"><div class="clabel">Cultura</div><h3>Europeu neutro</h3><p>Português europeu. Sem abrasileiramentos. Sem gírias de "guru digital". Sem countdown agressivo.</p></div>
+</div>
+<div class="divider"></div>
+<div class="g2">
+<div><div class="ey" style="margin-bottom:.9rem">O que dizemos</div>
+<div class="gloss-item"><span class="gi" style="color:#6BAE6B">✓</span><span class="gt"><strong>Ambiente</strong> — em vez de "comunidade mágica" ou "tribo"</span></div>
+<div class="gloss-item"><span class="gi" style="color:#6BAE6B">✓</span><span class="gt"><strong>Processo / Método</strong> — em vez de "estratégia revolucionária"</span></div>
+<div class="gloss-item"><span class="gi" style="color:#6BAE6B">✓</span><span class="gt"><strong>Construir / Fazer / Aparecer</strong> — verbos de acção concreta</span></div>
+<div class="gloss-item"><span class="gi" style="color:#6BAE6B">✓</span><span class="gt"><strong>"Ação traz clareza"</strong> — frase do Luciano, usar como âncora</span></div>
+<div class="gloss-item"><span class="gi" style="color:#6BAE6B">✓</span><span class="gt"><strong>"É possível"</strong> — não "é certo" nem "é garantido"</span></div>
+<div class="gloss-item"><span class="gi" style="color:#6BAE6B">✓</span><span class="gt"><strong>"Não é coincidência"</strong> — para introduzir a lógica do padrão</span></div>
+<div class="gloss-item"><span class="gi" style="color:#6BAE6B">✓</span><span class="gt"><strong>"O problema não é técnico"</strong> — para nomear a dor real</span></div>
+</div>
+<div><div class="ey" style="margin-bottom:.9rem">O que NUNCA dizemos</div>
+<div class="gloss-item no"><span class="gi" style="color:#C06060">✗</span><span class="gt"><strong>"Transformação"</strong> — clichê, perdeu significado</span></div>
+<div class="gloss-item no"><span class="gi" style="color:#C06060">✗</span><span class="gt"><strong>"Jornada épica" / "Guru" / "Segredo"</strong> — linguagem de hype</span></div>
+<div class="gloss-item no"><span class="gi" style="color:#C06060">✗</span><span class="gt"><strong>"Vai EXPLODIR" / "MUDAR A TUA VIDA"</strong> — o público português rejeita</span></div>
+<div class="gloss-item no"><span class="gi" style="color:#C06060">✗</span><span class="gt"><strong>Countdown agressivo fabricado</strong> — escassez que não é real</span></div>
+<div class="gloss-item no"><span class="gi" style="color:#C06060">✗</span><span class="gt"><strong>Promessas de número específico</strong> — "fatura €10k em 30 dias"</span></div>
+<div class="gloss-item no"><span class="gi" style="color:#C06060">✗</span><span class="gt"><strong>Comparações com outros eventos</strong> — o M&amp;S não precisa</span></div>
+<div class="gloss-item no"><span class="gi" style="color:#C06060">✗</span><span class="gt"><strong>Abrasileiramentos</strong> — "arrasar", "manda ver", "mandou bem"</span></div>
+</div>
+</div>
+</section>
+
+<!-- S15 OS 3 ÂNGULOS -->
+<section id="s15">
+<div class="ey">15</div>
+<h2>Os 3 <em>Ângulos</em></h2>
+<p class="intro">A narrativa central é a mesma para todos. O que muda é o ângulo de entrada — a primeira frase que faz cada grupo sentir que a mensagem foi escrita para ele.</p>
+<div class="angle-card"><div class="angle-hdr"><div class="angle-num">Ângulo 01 · LDP_01 · 12/05</div><div class="angle-name">ACC / TM com direito ao bilhete</div><div class="angle-obj">Objetivo: upgrade para o bilhete Premium</div></div>
+<div class="angle-body">
+<div class="angle-row"><div class="ar-lbl">Tom</div><p>Reconhecimento de pertencimento + lógica económica clara. Este grupo já investiu. A comunicação valida essa escolha — e apresenta o upgrade como continuação natural, não como venda.</p></div>
+<div class="angle-row"><div class="ar-lbl">Ângulo de entrada</div><div class="akey">"Já fizeste parte do caminho. Agora escolhe como queres viver o próximo capítulo."</div></div>
+<div class="angle-row"><div class="ar-lbl">Frase-chave</div><div class="akey">"Quem vai no START vai ao evento. Quem vai no PREMIUM vive o evento."</div></div>
+<div class="angle-row" style="border:none;margin:0;padding:0"><div class="ar-lbl">O que NÃO fazer</div><p>Não criar urgência artificial. Não comparar com quem não tem bilhete. Não usar "última chance". Não revelar que há outros grupos com condições diferentes.</p></div>
+</div></div>
+<div class="angle-card"><div class="angle-hdr"><div class="angle-num">Ângulo 02 · LDP_02 · 14/05</div><div class="angle-name">ACC / TM sem bilhete ainda</div><div class="angle-obj">Objetivo: vender qualquer bilhete · destaque para o Premium</div></div>
+<div class="angle-body">
+<div class="angle-row"><div class="ar-lbl">Tom</div><p>Prova de padrão + pertencimento + lógica de investimento. Mostrar o mecanismo: os alunos que mais crescem são os que aparecem em todos os momentos.</p></div>
+<div class="angle-row"><div class="ar-lbl">Ângulo de entrada</div><div class="akey">"Os alunos que mais crescem são os que aparecem em todos os momentos. Não é coincidência."</div></div>
+<div class="angle-row"><div class="ar-lbl">Frase-chave</div><div class="akey">"O evento não é para quem já chegou. É para quem decidiu chegar."</div></div>
+<div class="angle-row" style="border:none;margin:0;padding:0"><div class="ar-lbl">O que NÃO fazer</div><p>Não usar linguagem de medo de forma agressiva. Não ignorar a objeção da vergonha. Sempre Premium primeiro na apresentação de bilhetes.</p></div>
+</div></div>
+<div class="angle-card"><div class="angle-hdr"><div class="angle-num">Ângulo 03 · LDP_03 · 13/05</div><div class="angle-name">Mentoria GT / Formação</div><div class="angle-obj">Objetivo: vender qualquer bilhete · semear o Acelerator</div></div>
+<div class="angle-body">
+<div class="angle-row"><div class="ar-lbl">Tom</div><p>Oportunidade + prova de par social + ausência de pressão de venda. Este público nunca foi ao evento. Começar por vender o "mundo" — a oportunidade do digital em Portugal — antes de vender o evento.</p></div>
+<div class="angle-row"><div class="ar-lbl">Ângulo de entrada</div><div class="akey">"O digital deixou de ser alternativa. É o jogo. A questão é se entras agora, com método e comunidade, ou se esperas."</div></div>
+<div class="angle-row"><div class="ar-lbl">Frase-chave</div><div class="akey">"Não vais lá para aprender. Vais para desbloquear o que já sabes e ainda não consegues fazer."</div></div>
+<div class="angle-row" style="border:none;margin:0;padding:0"><div class="ar-lbl">O que NÃO fazer</div><p>Não assumir que conhecem o evento. Não fazer pitch do Acelerator directamente. Não usar jargão técnico sem contextualizar. O Acelerator é semeado no final — nunca pitchado.</p></div>
+</div></div>
+</section>
+
+<!-- S16 APLICAÇÕES -->
+<section id="s16">
+<div class="ey">16</div>
+<h2><em>Aplicações</em></h2>
+<p class="intro">Exemplos de copy prontos a usar ou adaptar. Um por ângulo, em três formatos distintos cada.</p>
+<div class="ey" style="color:var(--ink-mid);margin-bottom:1rem">Ângulo 01 · Upgrade Premium</div>
+<div class="copy-box" data-format="WhatsApp individual"><p>"Olá [nome]. Tenho uma condição exclusiva para ti sobre o Master and Scale — e é mesmo só para este grupo. Na terça-feira dia 12, às 21h, vou fazer uma live para te mostrar qual é. Reserva o dia."</p></div>
+<div class="copy-box" data-format="Abertura de live · Script"><p>"Esta live é para um grupo muito específico — pessoas que já fazem parte da nossa comunidade há tempo suficiente para merecerem uma condição que o público geral nunca vai ter. Se estás aqui, é porque és uma dessas pessoas. Antes de te mostrar essa condição, quero que recordes porque é que a forma como vais ao Master and Scale não é um detalhe."</p></div>
+<div class="copy-box" data-format="CTA · Encerramento"><p>"Tens duas opções. Opção 1: manténs o teu bilhete START como está — vais ao evento e isso já tem valor. Opção 2: fazes o upgrade para o PREMIUM agora, com esta condição de €300 exclusiva deste grupo, e vives o evento de forma completamente diferente. O link está no chat. Tens até [data] para decidir."</p></div>
+<div class="divider"></div>
+<div class="ey" style="color:var(--ink-mid);margin-bottom:1rem">Ângulo 02 · ACC sem bilhete</div>
+<div class="copy-box" data-format="Post / Story · Teaser"><p>"Há um padrão que os números mostram todos os anos: os alunos que mais crescem são os que aparecem em todos os momentos. O Gonçalo e o Miguel saíram do evento e na segunda-feira dividiram papéis — um no comercial, outro no operacional. €12.640/mês em 12 meses. Esse insight não veio de uma palestra. Veio do ambiente. Na quinta-feira vou mostrar-te como tens acesso ao mesmo ambiente — com uma condição exclusiva para alunos do Acelerator."</p></div>
+<div class="copy-box" data-format="Tratamento de objeção · Script"><p>"Há uma coisa que preciso de dizer antes de continuar — porque sei que há pessoas aqui a pensar isto: 'ainda não tenho resultado, o evento não é para mim.' [Nome do aluno] estava exactamente nessa situação. Pensou em não vir. Decidiu vir mesmo assim. Sabes o que aconteceu? [resultado]. O evento não é para quem já chegou lá. É para quem decidiu que vai chegar — e quer chegar mais depressa."</p></div>
+<div class="copy-box" data-format="CTA · Ancoragem de preço"><p>"O bilhete Premium custa €649 para o público geral. No lote 1 vai estar a €579. Para vocês — alunos do Acelerator — a condição exclusiva é €399. €180 de diferença face ao lote 1. E repara: entre o VIP e o Premium, com esta condição, a diferença é de apenas €70. €70 para teres o Q&amp;A privado com o Luciano e acesso ao Dia Premium de 26 de Novembro — um dia de convívio e networking sem palco, num clima leve e descontraído.do com o Luciano e o dia de experiência de networking de 26 de Novembro. O Premium é a escolha óbvia. Link no chat — do mais completo para o mais básico."</p></div>
+<div class="divider"></div>
+<div class="ey" style="color:var(--ink-mid);margin-bottom:1rem">Ângulo 03 · Mentoria GT</div>
+<div class="copy-box" data-format="Email de convite"><p>"Há dez anos, gerir tráfego pago era coisa de agências grandes. Hoje qualquer pessoa com método pode ter um negócio digital a faturar mais do que a maioria dos empregos em Portugal. Em Portugal ainda somos conservadores em relação a isto — e por isso os que entram agora, com método e comunidade, estão muito à frente. Na quarta-feira vou mostrar-te o que está do outro lado — e o caminho para lá chegares."</p></div>
+<div class="copy-box" data-format="Prova social · Caso de transição"><p>"A Joana era funcionária pública. Achava que o digital não era para ela. Foi ao Master and Scale. No evento percebeu que os clientes de contabilidade dela podiam ser clientes de tráfego. Nenhuma palestra disse isso. O insight veio do ambiente. Em março de 2026 faturou €13.400. Não é um caso isolado. É um padrão."</p></div>
+<div class="copy-box" data-format="Abertura de live · Ângulo oportunidade"><p>"O Master and Scale não é uma conferência. É onde a comunidade do Luciano Larrossa se encontra ao vivo — gestores de tráfego, freelancers digitais, empreendedores que escolheram este jogo. Em 3 dias vais estar rodeado de pessoas que estão onde queres chegar. Vais ver casos reais. Vais sair com um plano — não uma motivação, um plano. E vais perceber que o problema nunca foi o mercado. Foi que ainda não fizeste o que sabes que precisas de fazer."</p></div>
+</section>
+
+<div class="print-note">Master and Scale · Brandbook 2026 · Documento confidencial para uso interno<br>Luciano Larrossa · Lagoas Park Hotel, Porto Salvo, Oeiras · 26–29 Novembro 2026</div>
+
+</main>
+
+<script>
+const sections=document.querySelectorAll('section[id]');
+const links=document.querySelectorAll('.nav-link');
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=document.querySelector('.nav-link[href="#'+e.target.id+'"]');if(a)a.classList.add('active')}})},{threshold:.25});
+sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
