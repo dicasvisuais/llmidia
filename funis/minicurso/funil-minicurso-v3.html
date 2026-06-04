@@ -1162,6 +1162,31 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
   color: var(--green-600);
 }
 
+/* Wrapper de scroll horizontal para tabelas */
+.table-scroll { margin: 28px 0; }
+.table-scroll > table { margin: 0; }
+
+/* Barra superior mobile + drawer (escondidos no desktop) */
+.mobile-bar { display: none; }
+.sidebar-backdrop { display: none; }
+
+.mobile-bar {
+  position: fixed; top: 0; left: 0; right: 0; height: 54px; z-index: 250;
+  align-items: center; gap: 10px; padding: 0 12px;
+  background: var(--teal-900); color: var(--paper);
+}
+.mobile-bar-title {
+  font-family: var(--font-display); font-weight: 500; font-size: 16px;
+  color: var(--paper); letter-spacing: -0.01em;
+}
+.hamburger {
+  width: 42px; height: 42px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none; cursor: pointer;
+  color: var(--paper); border-radius: 8px;
+}
+.hamburger:active { background: rgba(255,255,255,.12); }
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -1171,16 +1196,62 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
 }
 
 @media (max-width: 860px) {
-  .app { grid-template-columns: 1fr; }
-  .sidebar { position: relative; width: 100%; height: auto; }
-  .lens { padding: 32px 24px; }
+  .app { display: block; }
+  .mobile-bar { display: flex; }
+
+  /* Sidebar vira gaveta deslizante */
+  .sidebar {
+    position: fixed; top: 54px; left: 0;
+    width: 282px; max-width: 84vw; height: calc(100vh - 54px);
+    padding: 22px 20px;
+    transform: translateX(-100%);
+    transition: transform .28s ease;
+    z-index: 200;
+  }
+  .sidebar.open { transform: translateX(0); box-shadow: 0 0 50px rgba(0,0,0,.45); }
+
+  .sidebar-backdrop {
+    display: block; position: fixed; inset: 0; z-index: 150;
+    background: rgba(0,0,0,.5);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .25s ease, visibility .25s ease;
+  }
+  .sidebar-backdrop.show { opacity: 1; visibility: visible; pointer-events: auto; }
+
+  .content { padding-top: 54px; }
   .topbar { display: none; }
-  h1.lens-title { font-size: 36px; }
-  h2 { font-size: 26px; }
-  .stage-title { font-size: 32px; }
+
+  .lens { padding: 26px 18px 80px; }
+  h1.lens-title { font-size: 32px; }
+  .lens-intro { font-size: 16.5px; }
+  h2 { font-size: 24px; }
+  h3 { font-size: 20px; }
+  .stage-title { font-size: 28px; }
   .stage-hero { margin-top: 56px; }
   .moment { grid-template-columns: 1fr; gap: 8px; }
   .moment-num { font-size: 42px; }
+  .two-col { grid-template-columns: 1fr; gap: 16px; }
+  .thesis { padding: 36px 0; }
+  .thesis-quote { font-size: 26px; }
+  .diagram { padding: 20px 16px; }
+
+  /* Tabelas: scroll horizontal em vez de espremer colunas */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-scroll > table { min-width: 540px; }
+
+  /* Kanban de 9 colunas: scroll horizontal */
+  .kanban {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 96px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px;
+  }
+  .kanban-col { min-height: 72px; }
+
+  /* Fluxo de estados: melhor toque */
+  .state-flow { gap: 8px; }
 }
 
 /* ============================================================
@@ -1196,6 +1267,15 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
 <body>
 
 <div class="app">
+
+<!-- Barra superior (apenas mobile) -->
+<div class="mobile-bar">
+  <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <span class="mobile-bar-title">Funil Minicurso V3</span>
+</div>
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
 <!-- ============================================================
      SIDEBAR
@@ -1913,7 +1993,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
 
     <h3>Os KPIs-norte de cada equipa</h3>
 
-    <table>
+    <div class="table-scroll"><table>
       <thead>
         <tr>
           <th>Equipa</th>
@@ -1948,7 +2028,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
           diferentemente; lê-se separado.</td>
         </tr>
       </tbody>
-    </table>
+    </table></div>
 
     <h3>A ressalva do longo prazo</h3>
 
@@ -3709,7 +3789,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
             <p>Todos os parâmetros do projeto, agrupados pela sua origem. Os nomes aqui listados são os definitivos e valem em todos os sítios (ver <a href="#anexo-nomenclatura">Anexo 3</a>).</p>
 
             <h4>Agrupador <code>MINICURSO</code> — prefixo <code>mc_</code></h4>
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr><th>Parâmetro</th><th>Tipo</th><th>Significado / origem</th></tr>
               </thead>
@@ -3765,10 +3845,10 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                   <td>O <code>sck</code> da Hotmart no momento da venda. Serve sobretudo para identificar as vendas do marketing — no comercial não é fonte fiável da verdade (ver <a href="#decisoes">decisão 13</a>).</td>
                 </tr>
               </tbody>
-            </table>
+            </table></div>
 
             <h4>Agrupador <code>MQL PERPETUO</code> — partilhado pelos três funis (sessão · ebook · minicurso)</h4>
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr><th>Parâmetro</th><th>Tipo</th><th>Significado / origem</th></tr>
               </thead>
@@ -3799,7 +3879,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                   <td>Resposta a "Escolaridade". Só preenchido quando há qualificação.</td>
                 </tr>
               </tbody>
-            </table>
+            </table></div>
 
             <h4>UTMs — rastreio de origem</h4>
             <p>Passam intactos do URL para a planilha e para o CRM. Não são tocados pelo nosso sistema — apenas lidos e gravados.</p>
@@ -3808,7 +3888,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
             </p>
 
             <h4>Tags aplicadas ao card no Clint</h4>
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr><th>Tag</th><th>Quando é aplicada</th></tr>
               </thead>
@@ -3817,7 +3897,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                 <tr><td><code>MINICURSO-V3</code></td><td>Desde o cadastro (Etapa 1).</td></tr>
                 <tr><td><code>SESSAO-ESTRATEGICA_V3</code></td><td>Quando a lead completa o Caminho A (Etapa 4).</td></tr>
               </tbody>
-            </table>
+            </table></div>
           </section>
 
           <!-- ANEXO 2 — Planilha vs. CRM -->
@@ -3834,7 +3914,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
 
             <p>Mapeamento das colunas atuais da planilha para os parâmetros no Clint. As linhas marcadas com <span class="badge badge-pending">novo</span> não existiam na versão anterior e entram agora.</p>
 
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr><th>Coluna na planilha</th><th>Parâmetro no Clint</th><th>Agrupador / nota</th></tr>
               </thead>
@@ -3851,7 +3931,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                 <tr><td><code>mc_compra_sck</code> <span class="badge badge-pending">novo</span></td><td><code>mc_compra_sck</code></td><td>MINICURSO — <code>sck</code> da venda.</td></tr>
                 <tr><td>Tags <span class="badge badge-pending">novo</span></td><td><code>FUNIL-V3</code>, <code>MINICURSO-V3</code>, <code>SESSAO-ESTRATEGICA_V3</code></td><td>Coluna nova com as tags do card.</td></tr>
               </tbody>
-            </table>
+            </table></div>
 
             <div class="callout-quiet">A planilha ganha agora visibilidade do consumo (<code>mc_aulaX</code>, <code>mc_concluido</code>, <code>mc_janela</code>) que antes não existia. Era uma planilha de captura; passa a ser uma planilha de captura <em>e</em> de comportamento.</div>
 
@@ -3874,7 +3954,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
             </div>
 
             <h4>Convenções de escrita</h4>
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr><th>Elemento</th><th>Convenção</th><th>Exemplo</th></tr>
               </thead>
@@ -3885,10 +3965,10 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                 <tr><td>Valores</td><td>snake_case com sufixo de versão</td><td><code class="param-value">sessao-minicurso_v3</code>, <code class="param-value">mentoria-minicurso_v3</code></td></tr>
                 <tr><td>Tags</td><td>UPPERCASE com hífens</td><td><code>FUNIL-V3</code>, <code>MINICURSO-V3</code>, <code>SESSAO-ESTRATEGICA_V3</code></td></tr>
               </tbody>
-            </table>
+            </table></div>
 
             <h4>Renomeações face à versão anterior</h4>
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr><th>Antes</th><th>Agora</th><th>Porquê</th></tr>
               </thead>
@@ -3896,7 +3976,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                 <tr><td><code>utm_funil</code></td><td><code>origem_funil</code></td><td>Deixa de ser uma UTM (não vem só do anúncio); é um atributo do agrupador MQL PERPETUO, partilhado pelos três funis.</td></tr>
                 <tr><td><code>mc_timestamp</code></td><td><code>mc_datahora</code></td><td>Nome em português, coerente com o resto do agrupador e com <code>mc_datahora_reabertura</code>.</td></tr>
               </tbody>
-            </table>
+            </table></div>
 
             <div class="callout-quiet">Esta regra é uma das peças fundamentais da governança do projeto: garante que o dado nunca se perde na tradução entre ferramentas e que qualquer pessoa da equipa lê o mesmo nome onde quer que olhe.</div>
           </section>
@@ -3912,7 +3992,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
             <p>Compilação de tudo o que ficou em aberto ao longo das sete etapas. Cada linha é uma decisão a tomar — não um problema técnico, mas uma escolha de produto, jornada ou copy.</p>
 
             <h4>Decisões de produto e jornada</h4>
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr><th style="width:34px">#</th><th>Decisão</th><th>Etapa</th><th>Estado / contexto</th></tr>
               </thead>
@@ -3936,10 +4016,10 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                 <tr><td>17</td><td>Etapas internas do <code>PIPELINE_COMERCIAL-V3</code></td><td>6</td><td>Além de Base 1 (formulário Sessão) e Base 2 (WhatsApp), as restantes ficam a cargo do comercial.</td></tr>
                 <tr><td>18</td><td>Valor exato do desconto da oferta especial</td><td>6</td><td>Proposta: <code class="param-value">599 → 499</code>. A confirmar.</td></tr>
               </tbody>
-            </table>
+            </table></div>
 
             <h4>Validações técnicas <span class="badge badge-pending">confirmar com Nilberto</span></h4>
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr><th>Validação</th><th>Estado / contexto</th></tr>
               </thead>
@@ -3951,7 +4031,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                 <tr><td>Profundidade de personalização nos emails</td><td>MVP: só o nome. Futuro: por consciência.</td></tr>
                 <tr><td>Decisão de envio do email (Hipótese A)</td><td>O envio mora no Clint — falta validação tecnológica.</td></tr>
               </tbody>
-            </table>
+            </table></div>
 
             <div class="callout-decision">
               <div class="callout-decision-label">Como usar esta tabela na reunião</div>
@@ -3968,7 +4048,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
 
             <p>Quem faz o quê, em cada etapa. A célula a <span style="background:var(--green-100); color:var(--teal-900); font-weight:600; padding:1px 7px; border-radius:3px;">verde</span> marca o dono da etapa.</p>
 
-            <table>
+            <div class="table-scroll"><table>
               <thead>
                 <tr>
                   <th>Pessoa / área</th>
@@ -4053,7 +4133,7 @@ code.state-pill { font-size: 13px; padding: 4px 12px; }
                   <td class="owner">Dono — atende e fecha a venda</td>
                 </tr>
               </tbody>
-            </table>
+            </table></div>
 
             <div class="callout-quiet">Thiago (editor de vídeos) atua apenas na Etapa 0, no apoio à produção dos criativos e vídeos do Luciano. Dev é a combinação Diego + Bruno + Nilberto.</div>
           </section>
@@ -4207,6 +4287,27 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.anchor, .stage-hero').forEach(el => {
   if (el.id) observer.observe(el);
 });
+
+// ============================================================
+// MENU LATERAL MOBILE (drawer)
+// ============================================================
+var sidebarEl = document.querySelector('.sidebar');
+var backdropEl = document.getElementById('sidebar-backdrop');
+var hamburgerEl = document.getElementById('hamburger');
+
+function openDrawer() { sidebarEl.classList.add('open'); backdropEl.classList.add('show'); }
+function closeDrawer() { sidebarEl.classList.remove('open'); backdropEl.classList.remove('show'); }
+function toggleDrawer() { sidebarEl.classList.contains('open') ? closeDrawer() : openDrawer(); }
+
+if (hamburgerEl) hamburgerEl.addEventListener('click', toggleDrawer);
+if (backdropEl) backdropEl.addEventListener('click', closeDrawer);
+
+// No mobile, escolher um item de navegação fecha a gaveta
+document.querySelectorAll('.sidebar-nav a, .sidebar-footer a').forEach(function (a) {
+  a.addEventListener('click', function () { if (window.innerWidth <= 860) closeDrawer(); });
+});
+// Fechar com a tecla Esc
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
 
 // Init
 buildCrumbs();
