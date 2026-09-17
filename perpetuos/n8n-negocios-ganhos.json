@@ -1,0 +1,162 @@
+{
+  "name": "Clint - Negócios Ganhos -> Planilha (diário 04:00)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 4 * * *"
+            }
+          ]
+        }
+      },
+      "id": "node-schedule",
+      "name": "Todos os dias 04:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.clint.digital/v1/deals",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "origin_id",
+              "value": "07fc7c4b-82d2-427d-b09e-04a7f90f16f1"
+            },
+            {
+              "name": "status",
+              "value": "WON"
+            },
+            {
+              "name": "limit",
+              "value": "1000"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-http",
+      "name": "Clint: GET /v1/deals (WON)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "Clint api-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================================\n//  Clint -> Planilha | Mapear negócio ganho para colunas\n//  Nativos + valor (deal.value) + dias para ganhar + UTM (deal.fields).\n// ============================================================================\n\n// ==== CONFIG ================================================================\n// O valor é NATIVO (deal.value). Deixe '' — não precisa configurar nada.\nconst VALUE_FIELD_LABEL = '';\n// Fuso horário para formatar as datas (ISO -> legível).\nconst TIMEZONE = 'Europe/Lisbon';\n// ============================================================================\n\nconst STATUS_PT = { WON: 'Ganho', OPEN: 'Aberto', LOST: 'Perdido' };\n\nfunction fmtDate(iso) {\n  if (!iso) return '';\n  const d = new Date(iso);\n  if (isNaN(d.getTime())) return String(iso);\n  return d.toLocaleString('pt-PT', { timeZone: TIMEZONE, dateStyle: 'short', timeStyle: 'short' });\n}\n\n// Diferença em dias (inteiro) entre duas datas ISO. '' se faltar alguma.\nfunction diffDays(startIso, endIso) {\n  if (!startIso || !endIso) return '';\n  const a = new Date(startIso), b = new Date(endIso);\n  if (isNaN(a.getTime()) || isNaN(b.getTime())) return '';\n  return Math.round((b.getTime() - a.getTime()) / 86400000);\n}\n\n// Normaliza o objecto `fields` (formato livre) para uma lista { key, keyLower, value }.\nfunction normalizeFields(fields) {\n  const out = [];\n  if (!fields || typeof fields !== 'object') return out;\n  for (const [k, v] of Object.entries(fields)) {\n    let value = v;\n    if (v && typeof v === 'object') {\n      value = (v.value ?? v.val ?? v.content ?? v.text ?? JSON.stringify(v));\n    }\n    out.push({ key: k, keyLower: String(k).toLowerCase(), value });\n  }\n  return out;\n}\n\nfunction isEmpty(v) { return v === '' || v === null || v === undefined; }\n\n// Reúne os negócios de todas as páginas (funciona com 1 pedido ou com paginação).\nconst inputItems = $input.all();\nlet deals = [];\nfor (const it of inputItems) {\n  const b = it.json;\n  if (b && Array.isArray(b.data)) deals = deals.concat(b.data);\n  else if (Array.isArray(b)) deals = deals.concat(b);\n  else if (b && b.id) deals.push(b);\n}\n\nconst label = VALUE_FIELD_LABEL.trim();\nconst rows = [];\n\nfor (const deal of deals) {\n  const flat = normalizeFields(deal.fields);\n\n  // ---- valor do negócio fechado (nativo deal.value) ----\n  let valor = '';\n  if (label) {\n    if (!isEmpty(deal[label])) valor = deal[label];\n    else { const h = flat.find(f => f.keyLower === label.toLowerCase()); if (h) valor = h.value; }\n  }\n  if (isEmpty(valor) && !isEmpty(deal.value)) valor = deal.value;\n  if (isEmpty(valor)) {\n    const h = flat.find(f => /(valor.*fechad|valor|value|amount)/.test(f.keyLower));\n    if (h) valor = h.value;\n  }\n\n  // ---- parâmetros UTM (qualquer campo com \"utm\" no nome) ----\n  const utm = { utm_source:'', utm_medium:'', utm_campaign:'', utm_content:'', utm_term:'', utm_id:'' };\n  for (const f of flat) {\n    if (f.keyLower.includes('utm')) {\n      const m = f.keyLower.match(/utm[_-]?([a-z]+)/);\n      const norm = m ? ('utm_' + m[1]) : f.keyLower;\n      utm[norm] = f.value;\n    }\n  }\n\n  rows.push({\n    id_negocio: deal.id || '',\n    estado: STATUS_PT[deal.status] || deal.status || '',\n    contacto_nome: ((deal.contact && deal.contact.name) || '').trim(),\n    contacto_email: (deal.contact && deal.contact.email) || '',\n    contacto_telefone: (deal.contact && deal.contact.phone) || '',\n    responsavel: ((deal.user && deal.user.full_name) || '').trim(),\n    valor_fechado: isEmpty(valor) ? '' : valor,\n    moeda: deal.currency || '',\n    criado_em: fmtDate(deal.created_at),\n    ganho_em: fmtDate(deal.won_at),\n    dias_para_ganhar: diffDays(deal.created_at, deal.won_at),\n    etapa: deal.stage || '',\n    etapa_id: deal.stage_id || '',\n    origem_id: deal.origin_id || '',\n    ...utm,\n  });\n}\n\nreturn rows.map(r => ({ json: r }));\n"
+      },
+      "id": "node-code",
+      "name": "Mapear negócio -> colunas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        740,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1LPZ4rVl6hEOCPsu3gxMPqKJr1SN5H-OuVQYIZaDeEgM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Negócios Ganhos",
+          "mode": "list",
+          "cachedResultName": "Negócios Ganhos"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [
+            "id_negocio"
+          ],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "node-sheets",
+      "name": "Google Sheets: Append or Update",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        980,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets (OAuth2)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Todos os dias 04:00": {
+      "main": [
+        [
+          {
+            "node": "Clint: GET /v1/deals (WON)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clint: GET /v1/deals (WON)": {
+      "main": [
+        [
+          {
+            "node": "Mapear negócio -> colunas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapear negócio -> colunas": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Append or Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Lisbon"
+  },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

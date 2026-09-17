@@ -1,0 +1,250 @@
+{
+  "name": "Clint - Conversao cruzada WGT v2 (taxa + por pessoa)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "n1",
+      "name": "Executar manualmente",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.clint.digital/v1/origins",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "200"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n2",
+      "name": "1. GET origens",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "Clint api-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.clint.digital/v1/deals",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "origin_id",
+              "value": "7403f4aa-7a29-4863-b44e-b4f5a6ae6094"
+            },
+            {
+              "name": "limit",
+              "value": "1000"
+            }
+          ]
+        },
+        "options": {
+          "pagination": {
+            "pagination": {
+              "paginationMode": "updateAParameterInEachRequest",
+              "parameters": {
+                "parameters": [
+                  {
+                    "type": "qs",
+                    "name": "page",
+                    "value": "={{ $pageCount + 1 }}"
+                  }
+                ]
+              },
+              "paginationCompleteWhen": "other",
+              "completeExpression": "={{ $response.body.hasNext === false }}",
+              "limitPagesFetched": true,
+              "maxRequests": 50
+            }
+          }
+        }
+      },
+      "id": "n3",
+      "name": "2. GET negocios WGT",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "Clint api-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================================\n//  ETAPA A — Contactos ÚNICOS do WGT (a base do denominador)\n// ============================================================================\n// Para um teste rápido, poe LIMITE_TESTE = 50 (só verifica 50 contactos).\nconst LIMITE_TESTE = 0;   // 0 = TODOS\n\nconst vistos = new Map();\nfor (const it of $input.all()) {\n  const arr = (it.json && Array.isArray(it.json.data)) ? it.json.data : [];\n  for (const d of arr) {\n    const c = d.contact || {};\n    if (!c.id) continue;\n    if (!vistos.has(c.id)) vistos.set(c.id, {\n      contact_id: c.id,\n      nome: String(c.name || '').trim(),\n      email: String(c.email || '').trim().toLowerCase(),\n      telefone: c.phone || '',\n    });\n  }\n}\nlet lista = [...vistos.values()];\nconsole.log('Negocios WGT lidos por pagina -> contactos WGT unicos: ' + lista.length);\nif (LIMITE_TESTE > 0) { lista = lista.slice(0, LIMITE_TESTE); console.log('*** TESTE: so ' + lista.length + ' contactos ***'); }\nreturn lista.map(v => ({ json: v }));\n"
+      },
+      "id": "n4",
+      "name": "3. Contactos WGT unicos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.clint.digital/v1/deals?contact_id={{ $json.contact_id }}&limit=200",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 15,
+              "batchInterval": 1000
+            }
+          }
+        }
+      },
+      "id": "n5",
+      "name": "4. GET historico por contacto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        400
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "Clint api-token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================================\n//  ETAPA B — Analisar histórico de cada contacto WGT: 1.o toque + ganhos fora\n//  Denominador = 1.o negocio e WGT.  Numerador = desses, ganhou noutra origem.\n//  Uma linha por PESSOA (agregada).\n// ============================================================================\nconst WGT_ORIGINS = ['7403f4aa-7a29-4863-b44e-b4f5a6ae6094'];\nconst WGT = new Set(WGT_ORIGINS);\n\nconst origins = {};\nfor (const it of $('1. GET origens').all()) {\n  const arr = (it.json && Array.isArray(it.json.data)) ? it.json.data : [];\n  for (const o of arr) origins[o.id] = o.name || o.id;\n}\nconst nome = (id) => origins[id] || id || '';\nconst isProduto = (id) => /^(IGT|FGRS)/i.test(nome(id));   // produto pago \"real\"\nfunction ts(s){ const t=Date.parse(s); return isNaN(t)?Infinity:t; }\nfunction dias(a,b){ const A=Date.parse(a),B=Date.parse(b); if(isNaN(A)||isNaN(B))return ''; return Math.round((B-A)/86400000); }\n\nlet verificados=0, semTimeline=0, originadosWGT=0, converteram=0, comProduto=0;\nconst destinos={};\nconst rows=[];\n\nfor (const it of $input.all()) {\n  verificados++;\n  const deals = (it.json && Array.isArray(it.json.data)) ? it.json.data : [];\n  if (!deals.length) { semTimeline++; continue; }\n\n  // 1.o negocio do contacto (across all)\n  let earliest = deals[0];\n  for (const d of deals) if (ts(d.created_at) < ts(earliest.created_at)) earliest = d;\n  if (!WGT.has(earliest.origin_id)) continue;   // DENOMINADOR: 1.o toque tem de ser WGT\n  originadosWGT++;\n\n  const won = deals.filter(d => d.status === 'WON' && !WGT.has(d.origin_id));\n  if (!won.length) continue;                     // originado mas nao converteu fora\n  converteram++;\n\n  const c = earliest.contact || (deals.find(d=>d.contact&&d.contact.name)||{}).contact || {};\n  const entrada = earliest.created_at;\n  won.sort((a,b)=>ts(a.won_at||a.created_at)-ts(b.won_at||b.created_at));\n  const funis = [...new Set(won.map(w=>nome(w.origin_id)))];\n  const produtos = [...new Set(won.filter(w=>isProduto(w.origin_id)).map(w=>nome(w.origin_id)))];\n  won.forEach(w=>{ destinos[w.origin_id]=(destinos[w.origin_id]||0)+1; });\n  if (produtos.length) comProduto++;\n\n  const moedas = [...new Set(won.map(w=>w.currency).filter(Boolean))];\n  const valorEur = won.filter(w=>w.currency==='EUR' && typeof w.value==='number').reduce((a,w)=>a+w.value,0);\n  const primeiro = won[0].won_at || won[0].created_at;\n  const ultimo = won[won.length-1].won_at || won[won.length-1].created_at;\n  const suspeita = won.some(w=>{ const dd=dias(entrada, w.won_at||w.created_at); return dd!=='' && dd<=0; });\n\n  rows.push({\n    contacto_id: c.id || '',\n    nome: String(c.name||'').trim(),\n    email: String(c.email||'').trim().toLowerCase(),\n    telefone: c.phone || '',\n    data_entrada_wgt: entrada,\n    n_ganhos_fora: won.length,\n    funis_ganhos: funis.join(' | '),\n    ganhou_produto_real: produtos.length ? 'SIM' : 'NAO',\n    produtos_reais: produtos.join(' | '),\n    valor_ganhos_eur: Math.round(valorEur*100)/100,\n    moedas: moedas.join('|'),\n    primeiro_ganho: primeiro,\n    ultimo_ganho: ultimo,\n    dias_ate_1o_ganho: dias(entrada, primeiro),\n    total_negocios_contacto: deals.length,\n    flag_importacao_suspeita: suspeita ? 'SIM' : '',\n  });\n}\n\nconst taxa = originadosWGT ? (100*converteram/originadosWGT) : 0;\nconst suspeitas = rows.filter(r=>r.flag_importacao_suspeita==='SIM').length;\nconsole.log('==================== CONVERSAO CRUZADA WGT (v2) ====================');\nconsole.log('Contactos WGT verificados: ' + verificados + ' | sem historico (falhas): ' + semTimeline);\nconsole.log('>> DENOMINADOR - originados no WGT (1.o negocio = WGT): ' + originadosWGT);\nconsole.log('>> NUMERADOR   - desses, converteram noutra origem: ' + converteram);\nconsole.log('>> TAXA DE CONVERSAO CRUZADA: ' + taxa.toFixed(1) + '%');\nconsole.log('   dos convertidos, com PRODUTO real (IGT/FGRS): ' + comProduto);\nconsole.log('   linhas (1 por pessoa): ' + rows.length + ' | flags suspeitas: ' + suspeitas);\nconsole.log('   destinos: ' + (Object.entries(destinos).sort((a,b)=>b[1]-a[1]).map(([k,v])=>nome(k)+'='+v).join(' | ')||'-'));\n\nif (!rows.length) return [{ json: { nome:'SEM CONVERSOES', contacto_id:'', email:'', telefone:'', data_entrada_wgt:'', n_ganhos_fora:'', funis_ganhos:'', ganhou_produto_real:'', produtos_reais:'', valor_ganhos_eur:'', moedas:'', primeiro_ganho:'', ultimo_ganho:'', dias_ate_1o_ganho:'', total_negocios_contacto:'', flag_importacao_suspeita:'' } }];\nreturn rows.map(r=>({json:r}));\n"
+      },
+      "id": "n6",
+      "name": "5. Analisar (taxa + por pessoa)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "options": {
+          "fileName": "conversao_cruzada_wgt_por_pessoa.csv"
+        }
+      },
+      "id": "n7",
+      "name": "6. Gerar CSV",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Executar manualmente": {
+      "main": [
+        [
+          {
+            "node": "1. GET origens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. GET origens": {
+      "main": [
+        [
+          {
+            "node": "2. GET negocios WGT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. GET negocios WGT": {
+      "main": [
+        [
+          {
+            "node": "3. Contactos WGT unicos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Contactos WGT unicos": {
+      "main": [
+        [
+          {
+            "node": "4. GET historico por contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. GET historico por contacto": {
+      "main": [
+        [
+          {
+            "node": "5. Analisar (taxa + por pessoa)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Analisar (taxa + por pessoa)": {
+      "main": [
+        [
+          {
+            "node": "6. Gerar CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Lisbon"
+  },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
